@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>注册会员</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script type="text/javascript">
+	//输入框得到焦点，显示输入规则 
+	function on_focus(dom, message) {
+		$(dom).next().remove();
+		$(dom).after('<label>' + message + '</label>');
+	}
+	var validate_username = false;
+	var validate_email = false;
+	//用户名输入框失去焦点，校验用户名
+	function check_username() {
+		validate_username = false;
+		$('#member_username').nextAll('label').remove();
+		var username = $('#member_username').val();
+		//1.校验输入用户名不为空 
+		if (username === '') {
+			$('#member_username').after(
+					'<label style="color:red">用户名不能为空</label>');
+			return;
+		}
+		//2.校验用户名长度
+		if (username.length > 20 || username.length < 4) {
+			$('#member_username').after(
+					'<label style="color:red">用户名长度为4-20个字符</label>');
+			return;
+		}
+		//3.校验用户名使用的字符
+		var regex_format = /^[A-Za-z0-9_\-\u4e00-\u9fa5]+$/;//正则表达式
+		if (!new RegExp(regex_format).test(username)) {
+			$('#member_username')
+					.after(
+							'<label style="color:red">用户名只能由中文、英文、数字及\"-\"、\"_\"组成</label>');
+			return;
+		}
+
+		var regex_num = /^[0-9]+$/;
+		if (new RegExp(regex_num).test(username)) {
+			$('#member_username').after(
+					'<label style="color:red">用户名不能是纯数字，请重新输入</label>');
+			return;
+		}
+		//4.校验用户名是否存在
+		$.ajax({
+			url : '${ctx}/member/checkUsername',
+			type : 'post',
+			dataType : 'json',
+			data : 'username=' + username,
+			success : function(res) {
+				if (res == 1) {
+					$('#member_username').after(
+							'<label style="color:red">此用户名可用。</label>');
+					validate_username = true;
+				} else {
+					$('#member_username').after(
+							'<label style="color:red">此用户名已存在，请重新输入。</label>');
+				}
+			},
+			error : function() {
+
+			}
+		})
+	}
+
+	//密码框失去焦点，校验密码
+	function check_password() {
+		$('#member_password').next().remove();
+		var password = $('#member_password').val();
+		var password_confirm = $('#member_password_confirm').val();
+		//6.校验确认密码和密码是否一致,如果一致,确认密码下面的错误消息应该清除
+		if (password_confirm !== '') {
+			$('#member_password_confirm').next().remove();
+			if (password_confirm !== password) {
+				$('#member_password_confirm').after(
+						'<label style="color:#f00;">两次密码输入不一致,请重新输入</label>');
+			}
+		}
+		//1.校验输入密码不为空 
+		if (password == '') {
+			$('#member_password').after(
+					'<label style="color:red">密码不能为空。</label>');
+			return false;
+		}
+		//2.校验密码长度
+		if (password.length<6||password.length>20) {
+			$('#member_password').after(
+					'<label style="color:#f00;">密码长度只能在6-20位字符之间</label>');
+			return false;
+		}
+		//3.校验密码使用的字符
+		if (!/^.*([\W_a-zA-Z0-9-])+.*$/i.test(password)) {
+			$('#member_password').after(
+					'<label style="color:#f00;">密码只能由英文、数字及标点符号组成</label>');
+			return false;
+		}
+		//4.校验是否为简单密码
+		if (pwdLevel(password) == 1) {
+			$('#member_password')
+					.after(
+							'<label style="color:#f00">该密码比较简单，有被盗风险，建议您更改为复杂密码，如字母+数字的组合</label>');
+			return true;
+		}
+
+		//5.校验是否为弱密码
+		if (pwdWeak(password)) {
+			$('#member_password')
+					.after(
+							'<label style="color:#f00">该密码比较简单，有被盗风险，建议您更改为复杂密码</label>');
+			return true;
+		}
+		return true;
+
+	}
+	//确认密码框失去焦点，校验确认密码
+	function check_password_confirm() {
+		var password = $('#member_password').val();//密码
+		var password_confirm = $('#member_password_confirm').val();//确认密码
+		$('#member_password_confirm').next().remove();
+		if (password !== password_confirm) {
+			$('#member_password_confirm').after(
+					'<label style="color:#f00;">两次密码输入不一致,请重新输入</label>');
+			return false;
+		}
+		return true;
+	}
+	//邮箱输入框失去焦点，校验邮箱
+	function check_email() {
+		validate_email = false;
+		$('#member_email').next().remove();
+		var email = $('#member_email').val();
+		//1.校验输入的邮箱不为空
+		if (email === '') {
+			return;
+		}
+		//2.校验邮箱格式是否正确
+		var regex = '^\\w+((-\\w+)|(\\.\\w+))*\\@[A-Za-z0-9]+((\\.|-)[A-Za-z0-9]+)*\\.[A-Za-z0-9]+$';
+		if (!new RegExp(regex).test(email)) {
+			$('#member_email').after(
+					'<label style="color:#f00;"> 邮箱格式不正确，请重新输入</label>');
+			return;
+		}
+		//3.校验邮箱是否已存在
+		$
+				.ajax({
+					url : '${ctx}/member/checkEmail',
+					type : 'post',
+					dataType : 'json',
+					data : 'email=' + email,
+					success : function(res) {
+						if (res !== 1) {
+							var msg = '<label style="color:#f00;">该email已被使用，请重新输入</label>';
+							$('#member_email').after(msg);
+							//这里$.ajax({success:function(){}})里面的success的回调函数返回任何结果,都不会对外部函数check_username起任何作用
+						} else {
+							$('#member_email').after(
+									'<img src="${ctx}/res/img/success.png"/>');
+							//全局变量解决ajax校验结果的问题,第3步,在校验成功之后,修改全局变量的值
+							validate_email = true;
+							//绑定数据解决ajax校验结果的问题,第2步
+							$('#member_email').data('validate', true);
+							//$('#member_username').after('<label style="background:#ffffff url(\'${ctx}/res/img/success.png\') no-repeat scroll center center"></label>');
+						}
+					},
+					error : function(res) {
+
+					}
+				});
+	}
+	//校验验证码
+	function check_verifycode() {
+		var verifycode = $('#verifycode').val();
+		$('#verifycode').nextAll('label').remove();
+		//1.校验输入的验证码不为空
+		if (verifycode === '') {
+			$('#verifycode').after('<label style="color:#f00;">请输入验证码</label>');
+			return false;
+		}
+		return true;
+	}
+
+	//4.1判断密码等级
+	function pwdLevel(value) {
+		var pattern_1 = /^.*([\W_])+.*$/i;
+		var pattern_2 = /^.*([a-zA-Z])+.*$/i;
+		var pattern_3 = /^.*([0-9])+.*$/i;
+		var level = 0;
+		if (value.length > 10) {
+			level++;
+		}
+		if (pattern_1.test(value)) {
+			level++;
+		}
+		if (pattern_2.test(value)) {
+			level++;
+		}
+		if (pattern_3.test(value)) {
+			level++;
+		}
+		if (level > 3) {
+			level = 3;
+		}
+		return level;
+	}
+
+	//5.1判断是否弱密码
+	var weakPwdArray = [ "a123456", "123456789", "111111", "5201314",
+			"12345678", "123123", "password", "1314520", "123321", "7758521",
+			"1234567", "5211314", "666666", "520520", "woaini", "520131",
+			"11111111", "888888", "hotmail.com", "112233", "123654", "654321",
+			"1234567890", "123456", "88888888", "163.com", "000000",
+			"yahoo.com.cn", "sohu.com", "yahoo.cn", "111222tianya", "163.COM",
+			"tom.com", "139.com", "wangyut2", "pp.com", "yahoo.com",
+			"147258369", "123123123", "147258", "987654321", "100200",
+			"zxcvbnm", "123456a", "521521", "7758258", "111222", "110110",
+			"1314521", "11111111", "12345678", "a321654", "111111", "123123",
+			"5201314", "00000000", "q123456", "123123123", "aaaaaa",
+			"a123456789", "qq123456", "11112222", "woaini1314", "a123123",
+			"a111111", "123321", "a5201314", "z123456", "liuchang", "a000000",
+			"1314520", "asd123", "88888888", "1234567890", "7758521",
+			"1234567", "woaini520", "147258369", "123456789a", "woaini123",
+			"q1q1q1q1", "a12345678", "qwe123", "123456q", "121212", "asdasd",
+			"999999", "1111111", "123698745", "137900", "159357", "iloveyou",
+			"222222", "31415926", "123456", "111111", "123456789", "123123",
+			"9958123", "woaini521", "5201314", "18n28n24a5", "abc123",
+			"password", "123qwe", "123456789", "12345678", "11111111",
+			"dearbook", "00000000", "123123123", "1234567890", "88888888",
+			"111111111", "147258369", "987654321", "aaaaaaaa", "1111111111",
+			"66666666", "a123456789", "11223344", "1qaz2wsx", "xiazhili",
+			"789456123", "password", "87654321", "qqqqqqqq", "000000000",
+			"qwertyuiop", "qq123456", "iloveyou", "31415926", "12344321",
+			"0000000000", "asdfghjkl", "1q2w3e4r", "123456abc", "0123456789",
+			"123654789", "12121212", "qazwsxedc", "abcd1234", "12341234",
+			"110110110", "asdasdasd", "123456", "22222222", "123321123",
+			"abc123456", "a12345678", "123456123", "a1234567", "1234qwer",
+			"qwertyui", "123456789a", "qq.com", "369369", "163.com",
+			"ohwe1zvq", "xiekai1121", "19860210", "1984130", "81251310",
+			"502058", "162534", "690929", "601445", "1814325", "as1230",
+			"zz123456", "280213676", "198773", "4861111", "328658", "19890608",
+			"198428", "880126", "6516415", "111213", "195561", "780525",
+			"6586123", "caonima99", "168816", "123654987", "qq776491",
+			"hahabaobao", "198541", "540707", "leqing123", "5403693", "123456",
+			"123456789", "111111", "5201314", "123123", "12345678", "1314520",
+			"123321", "7758521", "1234567", "5211314", "520520", "woaini",
+			"520131", "666666", "RAND#a#8", "hotmail.com", "112233", "123654",
+			"888888", "654321", "1234567890", "a123456" ];
+	function pwdWeak(value) {
+		for ( var i in weakPwdArray) {
+			if (value === weakPwdArray[i]) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	//表单校验函数
+	function check_form() {
+		return validate_username && check_password()
+				&& check_password_confirm() && validate_email
+				&& check_verifycode();
+	}
+	//注册提交函数
+	function reg() {
+		if (check_form()) {
+			var form_data = $('#member_reg_form').serialize();
+			$.ajax({
+				url : '${ctx}/member/doReg',
+				type : 'post',
+				dataType : 'json',
+				data : form_data,
+				success : function(res) {
+					alert(res.message);
+					if (res.success) {
+						if ($('#prompt_login').prop('checked') == true) {
+							prompt_login(form_data);
+							return;
+						}
+						window.location = '${ctx}/index';
+					}
+				},
+				error : function(res) {
+
+				}
+			});
+		}
+	}
+
+	//注册成功后调用此函数立即登陆
+	function prompt_login(form_data) {
+		$.ajax({
+			url : '${ctx}/member/doLogin',
+			type : 'post',
+			dataType : 'json',
+			data : form_data,
+			success : function(res) {
+				if (res.success) {
+					window.location = '${ctx}/index';
+				} else {
+					alert(res.message);
+				}
+			},
+			error : function() {
+				alert('请求失败');
+			}
+		})
+	}
+</script>
+</head>
+<body>
+	<#include "/ftl/header.html">
+	<!-- 页面主题内容,页面容器 -->
+	<div class="container">
+		<h3 style="color: red">注册账户</h3>
+		<hr>
+		<form class="form-horizontal" role="form" id="member_reg_form">
+			<div class="form-group">
+				<label for="member_username" class="col-sm-2 control-label"><span
+					style="color: red">*</span>用户名</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="member_username"
+						name="username" placeholder="请输入用户名"
+						onfocus="on_focus(this,'4-20位字符,支持汉字、字母、数字、&quot-&quot及&quot_&quot组合')"
+						onblur="check_username()">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="member_password" class="col-sm-2 control-label"><span
+					style="color: red">*</span>密码</label>
+				<div class="col-sm-3">
+					<input type="password" class="form-control" id="member_password"
+						name="password" placeholder="请输入密码"
+						onfocus="on_focus(this,'6-20位字符，建议由字母，数字和符号两种以上组合')"
+						onblur="check_password()">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="member_password_confirm" class="col-sm-2 control-label"><span
+					style="color: red">*</span>确认密码</label>
+				<div class="col-sm-3">
+					<input type="password" class="form-control"
+						id="member_password_confirm" placeholder="请再次输入密码"
+						onfocus="on_focus(this,'请再次输入密码。')"
+						onblur="check_password_confirm()">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="member_email" class="col-sm-2 control-label"><span
+					style="color: red">*</span>邮箱</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="member_email"
+						name="email" placeholder="请输入邮箱"
+						onfocus="on_focus(this,'邮箱可用于登录、找回密码、接收订单通知等服务,必须输入')"
+						onblur="check_email()">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="verifycode" class="col-sm-2 control-label"><span
+					style="color: red">*</span>验证码</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="verifycode"
+						name="verifycode" placeholder="请输入验证码"
+						onfocus="$(this).next('label').remove()"
+						onblur="check_verifycode()">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 col-sm-offset-2">
+					<img width="150px" height="30px" alt="验证码" style="cursor: pointer"
+						src="${ctx}/verifyCode.action?vt=0"
+						onclick="this.src='${ctx}/verifyCode.action?vt=0&v='+new Date().getTime()" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 col-sm-offset-2">
+					<input type="checkbox" id="prompt_login"> 注册成功后立即登陆
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 col-sm-offset-2">
+					<button type="button" class="btn btn-lg btn-warning"
+						onclick="reg()">立即注册</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

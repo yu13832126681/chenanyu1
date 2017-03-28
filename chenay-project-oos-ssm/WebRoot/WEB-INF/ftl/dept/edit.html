@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>修改部门</title>
+<#include "/ftl/include.html">
+<script type="text/javascript">
+
+	function editSave() {
+		var data = $('#form').serialize();
+		$.ajax({
+			url : '${ctx}/dept/editSave',
+			type : 'post',
+			dataType : 'json',
+			data : data,
+			success : function(res) {
+				$("#btn_submit").popover_alert({
+					title:'提示',
+					content:res.message,
+					confirm:function(){
+						if(res.success){
+							window.location='${ctx}/dept/list';
+						}
+					}
+				});
+			},
+			error : function() {
+				$("#btn_submit").popover_alert({
+					title:'提示',
+					content:'请求失败'
+				});
+			}
+		});
+	}
+</script>
+
+</head>
+<body style="margin: 10px">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="panel-title row">
+				<span style="margin-left: 10px; vertical-align: middle;">修改部门</span> <span style="float: right"> <a class="btn btn-success" style="margin-right: 10px" href="${ctx}/dept/list">返回列表</a>
+				</span>
+			</div>
+		</div>
+		<div class="panel-body">
+			<form class="form-horizontal" role="form" id="form">
+				<input type="hidden" name="id" value="${dept.id}">
+				<div class="form-group">
+					<label for="dept.dname" class="col-sm-2 control-label">名称</label>
+					<div class="col-sm-10">
+						<input type="text" name="dname" value="${dept.dname}" class="form-control" id="dept.dname" placeholder="请输入名称">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="dept.ddesc" class="col-sm-2 control-label">描述</label>
+					<div class="col-sm-10">
+						<input type="text" name="ddesc" value="${dept.ddesc}" class="form-control" id="dept.ddesc" placeholder="请输入描述">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="dept.leader" class="col-sm-2 control-label">责任人</label>
+					<div class="col-sm-10">
+						<input type="text" name="leader" value="${dept.leader}" class="form-control" id="dept.leader" placeholder="请输入责任人">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="dept.loc" class="col-sm-2 control-label">区域</label>
+					<div class="col-sm-10">
+						<input type="text" name="dept.loc" value="${dept.loc}" class="form-control" id="dept.loc" placeholder="请输入区域">
+					</div>
+				</div>
+			</form>
+
+
+		</div>
+		<div class="panel-footer">
+			<a id="btn_submit" class="btn btn-default" onclick="editSave();" title="提示" data-container="body" data-toggle="popover" data-placement="top" data-content="顶部的 Popover 中的一些内容">提交</a> <a class="btn btn-danger">重置</a>
+		</div>
+	</div>
+
+</body>
+</html>

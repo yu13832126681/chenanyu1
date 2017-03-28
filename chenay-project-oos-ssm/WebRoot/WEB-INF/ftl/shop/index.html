@@ -1,0 +1,590 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>${shop.sname}</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css"
+	rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/bootstrap.extend.js"></script>
+<script type="text/javascript">
+	
+	// 收藏店铺
+	function add_favorite_shop(shopId){
+		$.ajax({
+			url:'${ctx}/member/addFavoriteShop',
+			type:'post',
+			dataType:'json',
+			data: 'shopId='+shopId,
+			success:function(res){
+				if(res.success){
+					alert(res.message);
+					window.location='${ctx}/shop/index?shopId='+shopId;
+				}else{
+					alert(res.message);
+				}
+			}
+		});
+	}
+	
+	// 取消店铺收藏
+	function abolish_favorite(shopId){
+			$.ajax({
+				url:'${ctx}/member/abolishFavorite',
+				type:'post',
+				dataType:'json',
+				data: 'shopId='+shopId,
+				success:function(res){
+					if(res){
+						window.location='${ctx}/shop/index?shopId='+shopId;
+					}else{
+						alert('操作失败');
+					}
+				}
+			});
+		}
+	
+	// 收藏菜品
+	function add_favorite_dish(dishId){
+		$.ajax({
+			url:'${ctx}/member/addFavoriteDish',
+			type:'post',
+			dataType:'json',
+			data: 'dishId='+dishId,
+			success:function(res){
+				if(res.success){
+					alert(res.message);
+					load_data_dish();
+				}else{
+					alert(res.message);
+				}
+			}
+		});
+	}
+	
+	// 取消菜品收藏
+	function remove_favorite_dish(dishId){
+			$.ajax({
+				url:'${ctx}/member/abolishFavoriteDish',
+				type:'post',
+				dataType:'json',
+				data: 'dishId='+dishId,
+				success:function(res){
+					if(res){
+						load_data_dish();
+					}else{
+						alert('操作失败');
+					}
+				}
+			});
+		}
+
+
+</script>
+</head>
+<body style="margin: 10px; overflow: scroll; min-height: 2000px">
+	<#include "/ftl/header.html">
+	<div class="container">
+		<div class="row">
+			<div style="float: left; margin-left: 20px; vertical-align: middle; padding: 6px 12px;">${shop.sname}</div>
+			
+			<#-- 判断当前登录的会员是否是
+			店铺的主人,session中的会员的id和控制器(controller)中传值过来的店铺shop的会员的id是否一致 --> 
+			<#if session_member?? && session_member.id == shop.memberId>
+			<div style="float: right; margin-right: 20px">
+				<a type="button" class="btn btn-default" href="${ctx}/shop/manage"
+					target="_blank">管理店铺 </a>
+			</div>
+			<#else>
+				<#if shopFavorite??>
+				<div style="float: left; margin-right: 20px">
+					<a type="button" class="btn btn-default"
+						onclick="abolish_favorite(${shop.id})">取消收藏 </a>
+				</div>
+				<#else>
+				<div style="float: left; margin-right: 20px">
+					<a type="button" class="btn btn-default"
+						onclick="add_favorite_shop(${shop.id})">收藏本店 </a>
+				</div>
+				</#if>
+			</#if>
+		</div>
+
+		<#-- 分隔线 -->
+		<hr style="height: 5px; margin-top: 5px; margin-bottom: 5px; border: none; border-top: 5px ridge green;" />
+
+		<#-- 导航菜单 -->
+		<ul id="shop_ul" class="nav nav-tabs">
+			<li class="active col-md-4 text-center"><a href="#shop_dish"
+				data-toggle="tab">菜单</a></li>
+			<li class="col-md-4 text-center"><a href="#shop_comment"
+				data-toggle="tab">评价</a></li>
+			<li class="col-md-4 text-center"><a href="#shop_info"
+				data-toggle="tab">详细</a></li>
+		</ul>
+
+		<div class="tab-content">
+			<!-- 菜单的tab页 -->
+			<!-- 菜单开始 -->
+			<div id="shop_dish" role="tabpanel" class="tab-pane fade in active">
+				<div class="container">
+					<ul id="shop_dish_ul" class="list-group" style="padding-right: 15px">
+						<#-- 静态页面
+						<li class="list-group-item" style="border:0px;margin-top:1px;border-bottom:1px solid #ddd;"> 
+							<div class="row">
+								<div class="col-md-2">
+									<img width="60" src="${ctx}/res/img/default.png">
+								</div>
+								<div class="col-md-7">
+									<div>榨菜肉丝饭</div>
+									<div>销量20</div>
+									<div>价格12元|优惠2元</div>
+								</div>
+								<div class="col-md-3">
+									<div class="input-group" style="margin-top: 2px">
+										<span class="input-group-addon" style="cursor: pointer"
+											onclick="dish_substract(this)">-</span> <input type="text"
+											name="dish_num" dish-id="'+dish.id+'" class="form-control"
+											onkeyup="value=value.replace(/[^\\d]/g,\'\')"
+											style="text-align: center"> <span
+											class="input-group-addon" style="cursor: pointer"
+											onclick="dish_add(this)">+</span> <span
+											class="input-group-addon btn-success" style="cursor: pointer"
+											onclick="dish_to_cart(this)">购买</span>
+											<span class="input-group-addon btn-success" style="cursor: pointer;color:red" onclick="add_favorite_dish()">收藏菜品</span>
+									</div>
+								</div>
+							</div>
+						</li> -->
+					</ul>
+					<#-- 分页条 -->
+					<div id="shop_dish_pagebar" class="row"
+						style="vertical-align: middle;">
+						<#-- 静态页面
+						<div class="col-sm-6">
+							<h4>
+								<span class="label label-default">共33条记录,当前第1 / 2页</span>
+							</h4>
+						</div>
+						<div class="col-sm-6">
+							<ul style="margin-top: 5px; margin-bottom: 5px; float: right"
+								class="pager">
+								<li class="disabled"><a href="#">首页</a></li>
+								<li style="margin-left: 5px" class="disabled"><a href="#">上一页</a></li>
+								<li style="margin-left: 5px"><a
+									href="javascript:load_data_dish(1,20);">下一页</a></li>
+								<li style="margin-left: 5px"><a
+									href="javascript:load_data_dish(1,20);">尾页</a></li>
+							</ul>
+						</div>
+						-->
+					</div>
+				</div>
+			</div>
+			<#-- 菜单结束 --> <#-- 评价开始 -->
+			<div id="shop_comment" role="tabpanel" class="tab-pane fade">
+				<div class="container">
+					<ul class="list-group" id="shop_comment_ul"
+						style="padding-right: 15px">
+						<#-- 静态页面
+						<li style="border: 0px; border-bottom: #999999 1px solid;"
+							class="list-group-item">
+							<div class="row">
+								<div>
+									<table style="border: 0px">
+										<tbody>
+											<tr>
+												<td width="20%" valign="top">
+													<div>
+														<img width="50" class="img-thumbnail"
+															src="${ctx}/res/img/default.png">
+													</div>
+													<div>用户名</div>
+												</td>
+												<td valign="top"
+													style="font-size: 11px; padding-left: 5px; padding-right: 30px">
+													<div class="row" style="margin: 0px">
+														<span style="float: left;">2016-03-23 12:15:49 说：</span> <span
+															style="float: right;"> <img width="10"
+															src="${ctx}/res/img/star.png" /> <img width="10"
+															src="${ctx}/res/img/star.png" /> <img width="10"
+															src="${ctx}/res/img/star.png" /> <img width="10"
+															src="${ctx}/res/img/star.png" /> <img width="10"
+															src="${ctx}/res/img/star.png" />
+														</span>
+													</div>
+													<div style="margin-top: 5px;">
+														刚来就先拿了生鱼片，差点没吃吐，幸好拿的不多。 烤肉还不错，就是得到三楼自取。
+														水果种类挺多的，炒菜也不错，饮品竟然还有现泡的菊花茶。nice~ 对了，没有用餐时间限制。
+														比较郁闷的是好久没吃自助，我高估了自己的胃。。。</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</li> -->
+					</ul>
+					<#-- 分页条 -->
+					<div id="shop_comment_pagebar" class="row"
+						style="vertical-align: middle;">
+						<#-- 静态页面
+						<div class="col-sm-6">
+							<h4>
+								<span class="label label-default">共24条记录,当前第1 / 2页</span>
+							</h4>
+						</div>
+						<div class="col-sm-6">
+							<ul style="margin-top: 5px; margin-bottom: 5px; float: right"
+								class="pager">
+								<li class="disabled"><a href="#">首页</a></li>
+								<li style="margin-left: 5px" class="disabled"><a href="#">上一页</a></li>
+								<li style="margin-left: 5px"><a
+									href="javascript:load_dish(1,20);">下一页</a></li>
+								<li style="margin-left: 5px"><a
+									href="javascript:load_dish(1,20);">尾页</a></li>
+							</ul>
+						</div>
+						-->
+					</div>
+				</div>
+			</div>
+			<#-- 评价结束 --> <#-- 详细信息开始 -->
+			<div id="shop_info" role="tabpanel" class="tab-pane fade">
+				<div class="container">
+					<ul class="list-group" style="padding-right: 15px;">
+						<li class="list-group-item"
+							style="border: 0px; margin-bottom: 1px; border-bottom: 1px solid #ddd">
+							总销量：${saleNum}</li>
+
+						<li class="list-group-item"
+							style="border: 0px; margin-bottom: 1px; border-bottom: 1px solid #ddd">
+							店铺地址：${shop.address}</li>
+						<li class="list-group-item"
+							style="border: 0px; margin-bottom: 1px; border-bottom: 1px solid #ddd">
+							店铺电话：${shop.tel }</li>
+						<li class="list-group-item"
+							style="border: 0px; margin-bottom: 1px; border-bottom: 1px solid #ddd">
+							下单后 ${shop.waitMinutes} 分钟可以送达</li>
+					</ul>
+				</div>
+			</div>
+			<#-- 详细信息结束 -->
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		
+		//加载店铺的菜单列表数据,填充html
+		function load_data_dish(pageIndex,pageSize){
+			var params = 'shopId=${shop.id}';
+			if((pageIndex || pageIndex===0) && pageSize){
+				params += '&pageIndex='+pageIndex+'&pageSize='+pageSize;
+			} 
+			$.ajax({
+				url:'${ctx}/dish/listData',
+				type:'post',
+				dataType:'json',
+				data:params,
+				success:function(pb){
+					//填充菜单列表ul的html
+					render_dish_list(pb);
+					//填充分页条html
+					render_dish_pagebar(pb);
+				},
+				error:function(){
+					
+				}
+				
+			});
+		}
+		
+		//填充菜单列表的html
+		function render_dish_list(pb){
+			if(!pb || !pb.data || pb.data.length==0){
+				var shop_dish_ul_emtpy = '<li class="list-group-item" style="border:0px">没有找到菜单数据</li>';
+				$('#shop_dish_ul').html(shop_dish_ul_emtpy);
+				return;
+			}
+			var data = pb.data;
+			var shop_dish_ul_html='';
+			for(var i in data){
+				//拿到每个菜品的数据
+				var dish = data[i];
+				var shop_dish_li_html = render_dish_data1(dish);
+				shop_dish_ul_html +=  shop_dish_li_html;
+			}
+			
+			$('#shop_dish_ul').html(shop_dish_ul_html);
+		}
+		
+		//得到单个菜单的html(是自己的店铺)
+		function render_dish_data(dish){
+			var shop_dish_li_html = '';
+			shop_dish_li_html +='<li class="list-group-item" style="border:0px;margin-top:1px;border-bottom:1px solid #ddd;">               ';
+			shop_dish_li_html +='	<div class="row">                                           ';
+			shop_dish_li_html +='		<div class="col-md-2">                                  ';
+			shop_dish_li_html +='			<img width="60" src="${ctx}/res/img/default.png">   ';
+			shop_dish_li_html +='		</div>                                                  ';
+			shop_dish_li_html +='		<div class="col-md-6">                                 ';
+			shop_dish_li_html +='			<div>'+dish.dname+'</div>                                    ';
+			shop_dish_li_html +='			<div>销量20</div>                                     ';
+			shop_dish_li_html +='			<div>价格'+dish.price+'元|优惠'+dish.coupon+'元</div>                               ';
+			shop_dish_li_html +='		</div>                                                  ';
+			shop_dish_li_html +='	</div>                                                      ';
+			shop_dish_li_html +='</li>                                                          ';
+			return shop_dish_li_html;
+		}
+		
+		//得到单个菜单的html(不是自己的店铺)
+		function render_dish_data1(dish){
+			var shop_dish_li_html = '';
+			shop_dish_li_html +='<li class="list-group-item" style="border:0px;margin-top:1px;border-bottom:1px solid #ddd;">               ';
+			shop_dish_li_html +='	<div class="row">                                           ';
+			shop_dish_li_html +='		<div class="col-md-2">                                  ';
+			shop_dish_li_html +='			<img width="60" src="${ctx}/res/img/default.png">   ';
+			shop_dish_li_html +='		</div>                                                  ';
+			shop_dish_li_html +='		<div class="col-md-6">                                 ';
+			shop_dish_li_html +='			<div>'+dish.dname+'</div>                                    ';
+			shop_dish_li_html +='			<div>销量20</div>                                     ';
+			shop_dish_li_html +='			<div>价格'+dish.price+'元|优惠'+dish.coupon+'元</div>                               ';
+			shop_dish_li_html +='		</div>                                                  ';
+			shop_dish_li_html +='		<div class="col-md-4">                                  ';
+			shop_dish_li_html +='			<div class="input-group" style="margin-top:2px">                                                             ';
+			shop_dish_li_html +='				<span class="input-group-addon" style="cursor: pointer;" onclick="dish_substract(this);">-</span>        ';
+			shop_dish_li_html +='				<input type="text" name="dish_num" dish-id="'+dish.id+'" class="form-control" onkeyup="value=value.replace(/[^\\d]/g,\'\')" style="text-align: center" >                      ';
+			shop_dish_li_html +='				<span class="input-group-addon" style="cursor: pointer;" onclick="dish_add(this);">+</span>              ';
+			shop_dish_li_html +='				<span class="input-group-addon btn-success" style="cursor: pointer;" onclick="dish_to_cart(this);">加入购物车</span>              ';
+		if(!dish.favorite){	
+			shop_dish_li_html +='				<span class="input-group-addon btn-success" style="cursor: pointer;color:red" onclick="add_favorite_dish('+dish.id+')">收藏菜品</span>';
+		}else{
+			shop_dish_li_html +='				<span class="input-group-addon btn-warning" style="cursor: pointer;color:green" onclick="remove_favorite_dish('+dish.id+')">取消收藏</span>';
+		}
+			shop_dish_li_html +='			</div>                                                                                                       ';
+			shop_dish_li_html +='		</div>                                                  ';
+			shop_dish_li_html +='	</div>                                                      ';
+			shop_dish_li_html +='</li>                                                          ';
+			return shop_dish_li_html;
+		}
+		
+		//填充菜单列表的分页条
+		function render_dish_pagebar(pb){
+			var html_pagebar = '';                                                                                                       
+			html_pagebar +='<div class="col-sm-6">                                                                                       ';
+			html_pagebar +='<h4>                                                                                                         ';
+			html_pagebar +='	<span class="label label-default">共'+pb.total+'条记录,当前第'+(pb.pageIndex+1)+' / '+pb.totalPage+'页</span>         ';
+			html_pagebar +='</h4>                                                                                                        ';
+			html_pagebar +='</div>                                                                                                       ';
+			html_pagebar +='<div class="col-sm-6">                                                                                       ';
+			html_pagebar +='	<ul class="pager" style="margin-top:5px;margin-bottom:5px;float: right">                                 ';
+			if(pb.pageIndex===0){
+				html_pagebar +='		<li class="disabled"><a href="#">首页</a></li>                                                         ';
+			}else{
+				html_pagebar +='		<li><a href="javascript:load_data_dish(0,'+pb.pageSize+');">首页</a></li>                                                      ';
+			}
+			if(pb.pageIndex===pb.previousIndex){
+				html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">上一页</a></li>                               ';
+			}else{
+				html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data_dish('+pb.previousIndex+','+pb.pageSize+');">上一页</a></li>          ';
+			}
+			if(pb.pageIndex===pb.nextPageIndex){
+				html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">下一页</a></li>                               ';
+			}else{
+				html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data_dish('+pb.nextPageIndex+','+pb.pageSize+');">下一页</a></li>          ';
+			}
+			if(pb.pageIndex===pb.lastPageIndex){
+				html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">尾页</a></li>                                ';
+			}else{
+				html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data_dish('+pb.lastPageIndex+','+pb.pageSize+');">尾页</a></li>           ';
+			}
+			html_pagebar +='	</ul>                                                                                                    ';
+			html_pagebar +='</div>                                                                                                       ';
+			$('#shop_dish_pagebar').html(html_pagebar).show();  
+		}
+		
+		//菜品减少数量
+		function dish_substract(dom){
+			var input = $(dom).next();
+			//输入框拿到的value是字符串
+			var num = input.val();
+			if(num===''){
+				return;
+			}
+			//将字符串转为数字
+			num = parseInt(num);
+			if(num <= 0){
+				return;
+			}
+			num = num - 1;
+			if(num === 0 ){
+				input.val('');
+				return;
+			}
+			input.val(num);
+		}
+		
+		//菜品添加数量
+		function dish_add(dom){
+			var input = $(dom).prev();
+			var num = input.val();
+			if(num===''){
+				num='0';
+			}
+			num=parseInt(num);
+			input.val(num+1);
+		}
+		
+		//加入购物车
+		function dish_to_cart(dom){
+			var input = $(dom).prevAll('input[name="dish_num"]');
+			var dish_id = input.attr('dish-id');//拿到自定义属性dish_id的值
+			var dish_num = input.val();//拿到value的值
+			if(dish_num===''){
+				alert('数量不能为空');
+				return;
+			}
+			$.ajax({
+				url:'${ctx}/cart/addToCart',
+				type:'post',
+				dataType:'json',
+				data: {
+					dish_id : dish_id,
+					dish_num : dish_num
+				},
+				success:function(res){
+					alert(res.message);
+					if(res.success){
+						input.val('');
+						header_cart_change();//修改顶部导航中的购物车的数量
+					}
+				},
+				error:function(){
+					
+				}
+			});
+		}
+		
+		 //加载店铺的评价列表数据,填充html
+		function load_data_comment(pageIndex,pageSize){
+			var params = 'shopId=${shop.id}';
+			if((pageIndex || pageIndex===0) && pageSize){
+				params += '&pageIndex='+pageIndex+'&pageSize='+pageSize;
+			} 
+			$.ajax({
+				url:'${ctx}/comment/listData',
+				type:'post',
+				dataType:'json',
+				data:params,
+				success:function(pb){
+					render_comment_list(pb);
+					render_comment_pagebar(pb);
+				},
+				error:function(){
+					
+				}
+				
+			});
+		}
+		
+		//填充评价列表的html
+		function render_comment_list(pb){
+			if(!pb || !pb.data || pb.data.length==0){
+				var shop_comment_ul_emtpy = '<li class="list-group-item" style="border:0px">没有找到菜单数据</li>';
+				$('#shop_comment_ul').html(shop_comment_ul_emtpy);
+				return;
+			}
+			var data = pb.data;
+			var shop_comment_ul_html='';
+			for(var i in data){
+				var comment = data[i];
+				var shop_comment_li_html = render_comment_data(comment);
+				shop_comment_ul_html +=  shop_comment_li_html;
+				
+			}
+			
+			$('#shop_comment_ul').html(shop_comment_ul_html);
+			
+		}
+		
+		//填充单个评价的html
+		function render_comment_data(comment){
+			var shop_comment_li_html = '';
+			shop_comment_li_html += '<li class="list-group-item" style="border:0px;margin-top:1px;border-bottom:1px solid #ddd;" >                               ';
+			shop_comment_li_html += '	<div class="row">                                                                                           ';
+			shop_comment_li_html += '		<div>                                                                                                   ';
+			shop_comment_li_html += '			<table style="border: 0px">                                                                         ';
+			shop_comment_li_html += '				<tbody>                                                                                         ';
+			shop_comment_li_html += '					<tr>                                                                                        ';
+			shop_comment_li_html += '						<td width="20%" valign="top">                                                           ';
+			shop_comment_li_html += '							<div><img width="50" class="img-thumbnail" src="${ctx}/res/img/default.png"></div>  ';
+			shop_comment_li_html += '							<div>'+comment.member.username+'</div>                                              ';
+			shop_comment_li_html += '						</td>                                                                                   ';
+			shop_comment_li_html += '						<td valign="top" style="font-size: 11px; padding-left: 5px;padding-right:30px">         ';
+			shop_comment_li_html += '							<div class="row" style="margin:0px">                                                ';
+			shop_comment_li_html += '								<span style="float:left;">'+comment.writeTime+'说：</span>                         ';
+			shop_comment_li_html += '								<span style="float:right;">                                                     ';
+			shop_comment_li_html += '									<img width="10" src="${ctx}/res/img/star.png" />                            ';
+			shop_comment_li_html += '									<img width="10" src="${ctx}/res/img/star.png" />                            ';
+			shop_comment_li_html += '									<img width="10" src="${ctx}/res/img/star.png" />                            ';
+			shop_comment_li_html += '									<img width="10" src="${ctx}/res/img/star.png" />                            ';
+			shop_comment_li_html += '									<img width="10" src="${ctx}/res/img/star.png" />                            ';
+			shop_comment_li_html += '								</span>                                                                         ';
+			shop_comment_li_html += '							</div>                                                                              ';
+			shop_comment_li_html += '							<div style="margin-top:5px;">'+comment.content+'</div>                                                 ';
+			shop_comment_li_html += '						</td>                                                                                   ';
+			shop_comment_li_html += '					</tr>                                                                                       ';
+			shop_comment_li_html += '				</tbody>                                                                                        ';
+			shop_comment_li_html += '			</table>                                                                                            ';
+			shop_comment_li_html += '		</div>                                                                                                  ';
+			shop_comment_li_html += '	</div>                                                                                                      ';
+			shop_comment_li_html += '</li>                                                                                                          ';
+			return shop_comment_li_html;                                                                                                            
+		}
+		
+		//添加评价列表的分页条
+		function render_comment_pagebar(pb){
+			var html_pagebar = '';                                                                                                       
+			html_pagebar +='<div class="col-sm-6">                                                                                       ';
+			html_pagebar +='<h4>                                                                                                         ';
+			html_pagebar +='	<span class="label label-default">共'+pb.total+'条记录,当前第'+(pb.pageIndex+1)+' / '+pb.totalPage+'页</span>         ';
+			html_pagebar +='</h4>                                                                                                        ';
+			html_pagebar +='</div>                                                                                                       ';
+			html_pagebar +='<div class="col-sm-6">                                                                                       ';
+			html_pagebar +='	<ul class="pager" style="margin-top:5px;margin-bottom:5px;float: right">                                 ';
+			if(pb.pageIndex===0){
+				html_pagebar +='		<li class="disabled"><a href="#">首页</a></li>                                                         ';
+			}else{
+				html_pagebar +='		<li><a href="javascript:load_data_comment(0,'+pb.pageSize+');">首页</a></li>                                                      ';
+			}
+			if(pb.pageIndex===pb.previousIndex){
+				html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">上一页</a></li>                               ';
+			}else{
+				html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data_comment('+pb.previousIndex+','+pb.pageSize+');">上一页</a></li>          ';
+			}
+			if(pb.pageIndex===pb.nextPageIndex){
+				html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">下一页</a></li>                               ';
+			}else{
+				html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data_comment('+pb.nextPageIndex+','+pb.pageSize+');">下一页</a></li>          ';
+			}
+			if(pb.pageIndex===pb.lastPageIndex){
+				html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">尾页</a></li>                                ';
+			}else{
+				html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data_comment('+pb.lastPageIndex+','+pb.pageSize+');">尾页</a></li>           ';
+			}
+			html_pagebar +='	</ul>                                                                                                    ';
+			html_pagebar +='</div>                                                                                                       ';
+			$('#shop_comment_pagebar').html(html_pagebar).show();
+		}
+		
+		//加载店铺的菜单列表
+		load_data_dish();
+		
+		//加载店铺的评价列表
+		load_data_comment();
+	</script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oos.mapper.ShopMapper">
+	<resultMap id="BaseResultMap" type="com.oos.model.Shop">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="member_id" property="memberId" jdbcType="BIGINT" />
+		<result column="sname" property="sname" jdbcType="VARCHAR" />
+		<result column="pic" property="pic" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="tel" property="tel" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="freight" property="freight" jdbcType="DOUBLE" />
+		<result column="free_freight_amount" property="freeFreightAmount"
+			jdbcType="DOUBLE" />
+		<result column="wait_minutes" property="waitMinutes" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		id, member_id, sname, pic, address, tel, status, freight,
+		free_freight_amount, wait_minutes,
+		create_time, modify_time
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.oos.model.ShopExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from shop
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from shop
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from shop
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.oos.model.ShopExample">
+		delete from shop
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.oos.model.Shop">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into shop (member_id, sname, pic,
+		address, tel, status,
+		freight,
+		free_freight_amount, wait_minutes,
+		create_time, modify_time)
+		values
+		(#{memberId,jdbcType=BIGINT}, #{sname,jdbcType=VARCHAR},
+		#{pic,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR},
+		#{tel,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},
+		#{freight,jdbcType=DOUBLE}, #{freeFreightAmount,jdbcType=DOUBLE},
+		#{waitMinutes,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.oos.model.Shop">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into shop
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="memberId != null">
+				member_id,
+			</if>
+			<if test="sname != null">
+				sname,
+			</if>
+			<if test="pic != null">
+				pic,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="tel != null">
+				tel,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="freight != null">
+				freight,
+			</if>
+			<if test="freeFreightAmount != null">
+				free_freight_amount,
+			</if>
+			<if test="waitMinutes != null">
+				wait_minutes,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="memberId != null">
+				#{memberId,jdbcType=BIGINT},
+			</if>
+			<if test="sname != null">
+				#{sname,jdbcType=VARCHAR},
+			</if>
+			<if test="pic != null">
+				#{pic,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="tel != null">
+				#{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="freight != null">
+				#{freight,jdbcType=DOUBLE},
+			</if>
+			<if test="freeFreightAmount != null">
+				#{freeFreightAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="waitMinutes != null">
+				#{waitMinutes,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.oos.model.ShopExample"
+		resultType="java.lang.Integer">
+		select count(*) from shop
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update shop
+		<set>
+			<if test="record.id != null">
+				id = #{record.id,jdbcType=BIGINT},
+			</if>
+			<if test="record.memberId != null">
+				member_id = #{record.memberId,jdbcType=BIGINT},
+			</if>
+			<if test="record.sname != null">
+				sname = #{record.sname,jdbcType=VARCHAR},
+			</if>
+			<if test="record.pic != null">
+				pic = #{record.pic,jdbcType=VARCHAR},
+			</if>
+			<if test="record.address != null">
+				address = #{record.address,jdbcType=VARCHAR},
+			</if>
+			<if test="record.tel != null">
+				tel = #{record.tel,jdbcType=VARCHAR},
+			</if>
+			<if test="record.status != null">
+				status = #{record.status,jdbcType=INTEGER},
+			</if>
+			<if test="record.freight != null">
+				freight = #{record.freight,jdbcType=DOUBLE},
+			</if>
+			<if test="record.freeFreightAmount != null">
+				free_freight_amount =
+				#{record.freeFreightAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="record.waitMinutes != null">
+				wait_minutes = #{record.waitMinutes,jdbcType=INTEGER},
+			</if>
+			<if test="record.createTime != null">
+				create_time = #{record.createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.modifyTime != null">
+				modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update shop
+		set id = #{record.id,jdbcType=BIGINT},
+		member_id =
+		#{record.memberId,jdbcType=BIGINT},
+		sname =
+		#{record.sname,jdbcType=VARCHAR},
+		pic = #{record.pic,jdbcType=VARCHAR},
+		address = #{record.address,jdbcType=VARCHAR},
+		tel =
+		#{record.tel,jdbcType=VARCHAR},
+		status =
+		#{record.status,jdbcType=INTEGER},
+		freight =
+		#{record.freight,jdbcType=DOUBLE},
+		free_freight_amount =
+		#{record.freeFreightAmount,jdbcType=DOUBLE},
+		wait_minutes =
+		#{record.waitMinutes,jdbcType=INTEGER},
+		create_time =
+		#{record.createTime,jdbcType=TIMESTAMP},
+		modify_time =
+		#{record.modifyTime,jdbcType=TIMESTAMP}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.oos.model.Shop">
+		update shop
+		<set>
+			<if test="memberId != null">
+				member_id = #{memberId,jdbcType=BIGINT},
+			</if>
+			<if test="sname != null">
+				sname = #{sname,jdbcType=VARCHAR},
+			</if>
+			<if test="pic != null">
+				pic = #{pic,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="tel != null">
+				tel = #{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="freight != null">
+				freight = #{freight,jdbcType=DOUBLE},
+			</if>
+			<if test="freeFreightAmount != null">
+				free_freight_amount =
+				#{freeFreightAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="waitMinutes != null">
+				wait_minutes = #{waitMinutes,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.oos.model.Shop">
+		update shop
+		set
+		member_id = #{memberId,jdbcType=BIGINT},
+		sname =
+		#{sname,jdbcType=VARCHAR},
+		pic = #{pic,jdbcType=VARCHAR},
+		address =
+		#{address,jdbcType=VARCHAR},
+		tel = #{tel,jdbcType=VARCHAR},
+		status =
+		#{status,jdbcType=INTEGER},
+		freight = #{freight,jdbcType=DOUBLE},
+		free_freight_amount = #{freeFreightAmount,jdbcType=DOUBLE},
+		wait_minutes = #{waitMinutes,jdbcType=INTEGER},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		modify_time =
+		#{modifyTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectPage" resultMap="BaseResultMap" parameterType="com.oos.model.ShopExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from shop
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		limit #{pageIndex},#{pageSize}
+	</select>
+
+	<!-- 通过shopId获取shop信息（包含member属性）(未使用) -->
+	<resultMap id="MemberResultMap" type="com.oos.model.Member">
+		<id column="member_id" property="id" jdbcType="BIGINT" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="is_seller" property="isSeller" jdbcType="INTEGER" />
+		<result column="is_forbidden" property="isForbidden" jdbcType="INTEGER" />
+		<result column="is_frozen" property="isFrozen" jdbcType="INTEGER" />
+		<result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
+		<result column="activate_time" property="activateTime"
+			jdbcType="TIMESTAMP" />
+		<result column="login_ip" property="loginIp" jdbcType="VARCHAR" />
+		<result column="login_time" property="loginTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="ShopResultMap" type="com.oos.model.Shop">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="member_id" property="memberId" jdbcType="BIGINT" />
+		<result column="sname" property="sname" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="tel" property="tel" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="freight" property="freight" jdbcType="DOUBLE" />
+		<result column="free_freight_amount" property="freeFreightAmount"
+			jdbcType="DOUBLE" />
+		<result column="wait_minutes" property="waitMinutes" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+		<association property="member" column="member_id"
+			javaType="com.oos.model.Member" resultMap="MemberResultMap" />
+	</resultMap>
+	<select id="getById" resultMap="ShopResultMap" parameterType="java.lang.Long">
+		select s.*,m.id
+		<include refid="Base_Column_List" />
+		from shop s
+		left join member m on s.member_id = m.id
+		where id =
+		#{id,jdbcType=BIGINT}
+	</select>
+
+	<!-- 通过MemberId获取shop信息 -->
+	<select id="getByMemberId" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select * from shop
+		where member_id =
+		#{memberId,jdbcType=BIGINT}
+	</select>
+</mapper>

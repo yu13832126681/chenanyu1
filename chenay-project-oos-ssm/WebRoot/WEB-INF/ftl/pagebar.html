@@ -1,0 +1,83 @@
+<#if pb??>
+<div class="row" style="vertical-align: middle;">
+	<div class="col-sm-6">
+		<h4>
+			<span class="label label-default">共${pb.total}条记录,当前第${pb.pageIndex+1} / ${pb.totalPage}页</span>
+		</h4>
+	</div>
+	<div class="col-sm-6">
+		<ul class="pager" style="margin-top:5px;margin-bottom:5px;float: right">
+			<#--如果当前页页码和首页页码一样,首页按钮禁用 -->
+			<#if pb.pageIndex==0>
+				<li class="disabled"><a href="#">首页</a></li>
+			</#if>
+			<#if pb.pageIndex!=0>
+				<li><a href="javascript:goPage(0);">首页</a></li>
+			</#if>
+
+			<#--如果当前页页码和上一页页码一样,上一页按钮禁用 -->
+			<#if pb.pageIndex==pb.previousIndex>
+				<li class="disabled" style="margin-left: 5px"><a href="#">上一页</a></li>
+			</#if>
+			<#if pb.pageIndex!=pb.previousIndex>
+				<li style="margin-left: 5px"><a href="javascript:goPage(${pb.previousIndex});">上一页</a></li>
+			</#if>
+
+			<#--如果当前页页码和下一页页码一样,下一页按钮禁用 -->
+			<#if pb.pageIndex==pb.nextPageIndex>
+				<li class="disabled" style="margin-left: 5px"><a href="#">下一页</a></li>
+			</#if>
+			<#if pb.pageIndex!=pb.nextPageIndex>
+				<li style="margin-left: 5px"><a href="javascript:goPage(${pb.nextPageIndex});">下一页</a></li>
+			</#if>
+
+			<#--如果当前页页码和尾页页码一样,尾页按钮禁用 -->
+			<#if pb.pageIndex==pb.lastPageIndex>
+				<li class="disabled" style="margin-left: 5px"><a href="#">尾页</a></li>
+			</#if>
+			<#if pb.pageIndex!=pb.lastPageIndex>
+				<li style="margin-left: 5px"><a href="javascript:goPage(${pb.lastPageIndex});">尾页</a></li>
+			</#if>
+		</ul>
+	</div>
+</div>
+<input type="hidden" id="pageIndex" name="pageIndex" value="0"/>
+<input type="hidden" id="pageSize" name="pageSize" value="${pb.pageSize}"/>
+<script type="text/javascript">
+	/**
+	 *index 页码
+	 *ignorePageIndex 是否忽略页码,即查询第一页
+	 */
+	function goPage(index,ignorePageIndex){
+		var form = $("form")[0];
+		if(!form){
+			alert("列表页面缺少form");
+			return;
+		}
+		if(!form.action||form.action==""){
+			alert("form的action属性没有定义");
+			return;
+		}
+		if(!form.method||(form.method!="post"&&form.method!="POST")){
+			alert("form的method应该配置为post");
+			return;
+		}
+		var pageIndex = index;
+		var pageSize = $("#pageSize").val();
+		if(ignorePageIndex){
+			pageIndex = "0";
+		}
+		
+		if(!$(form).find("input[name='pageIndex']")[0]){
+			$(form).append('<input type="hidden" name="pageIndex"/>');
+		}
+		
+		if(!$(form).find("input[name='pageSize']")[0]){
+			$(form).append('<input type="hidden" name="pageSize"/>');
+		}
+		$(form).find("input[name='pageIndex']").val(index);
+		$(form).find("input[name='pageSize']").val(pageSize);
+		form.submit();
+	}
+</script>
+</#if>

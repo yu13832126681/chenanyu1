@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 配置静态文件路径 -->
+	<mvc:resources location="/res/" mapping="/res/**"
+		cache-period="31536000" />
+	<!-- 上传文件,upload位于res下 -->
+	<!-- <mvc:resources location="/res/upload/" mapping="/upload/**"
+		cache-period="31536000" /> -->
+	<!-- 上传文件,upload位于WebContent下 -->
+	<!-- <mvc:resources location="/upload/" mapping="/upload/**"
+		cache-period="31536000" /> -->
+	<!-- 上传文件,upload位于WEB-INF下 -->
+	<!-- <mvc:resources location="/WEB-INF/upload/" mapping="/upload/**"
+		cache-period="31536000" /> -->
+
+	<context:component-scan base-package="com.oos.framwork" />
+	<context:component-scan base-package="com.oos.**.controller" />
+	
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+	</mvc:interceptors>
+
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver" />
+	<!-- 支持文件上传,使用commons-fileupload.jar -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="1024000000"></property>
+	</bean>
+
+
+	<!-- 配置类型转换的工具 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.ByteArrayHttpMessageConverter">
+				</bean>
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+				</bean>
+				<bean
+					class="org.springframework.http.converter.ResourceHttpMessageConverter">
+				</bean>
+				<bean
+					class="org.springframework.http.converter.xml.SourceHttpMessageConverter">
+				</bean>
+				<bean
+					class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter">
+				</bean>
+				<bean
+					class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter">
+				</bean>
+				<bean
+					class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+					<!-- 解决 HttpMediaTypeNotAcceptableException: Could not find acceptable 
+						representation -->
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html;charset=UTF-8</value>
+							<value>text/plain;charset=UTF-8</value>
+							<value>application/json;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<mvc:annotation-driven conversion-service="conversionService" />
+	<bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="com.oos.framwork.DateConvertor" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- spring mvc -->
+	<!-- web mvc configuration -->
+	<!-- view resolver 视图解析器 -->
+	<bean id="jspResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+		<!-- 在存在多个匹配的资源的情况下,优先使用哪个的优先级,使用order值最小的视图解析器-->
+		<property name="order" value="1" />
+	</bean>
+	
+	<bean id="freemarkerResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"></property>
+		<property name="prefix" value="/ftl/" />
+		<property name="suffix" value=".html" />
+		<property name="contentType" value="text/html;charset=utf-8" />
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="exposeSessionAttributes" value="true" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<!-- 在存在多个视图解析器的情况下,优先使用哪个的优先级,优先使用 order值较小的视图解析器 -->
+		<!-- 这里优先使用freemarker的视图解析器(order值0), 没有再使用jsp的(order值1)-->
+		<property name="order" value="0" />
+	</bean>
+
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">0</prop>
+				<prop key="defaultEncoding">UTF-8</prop>
+				<prop key="url_escaping_charset">UTF-8</prop>
+				<prop key="locale">zh_CN</prop>
+				<prop key="boolean_format">true,false</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+				<prop key="date_format">yyyy-MM-dd</prop>
+				<prop key="time_format">HH:mm:ss</prop>
+				<prop key="number_format">0.######</prop>
+				<prop key="whitespace_stripping">true</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans> 

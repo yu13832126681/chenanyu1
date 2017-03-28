@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>管理员界面</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+
+</head>
+<body style="margin: 10px">
+	<#include "/ftl/header.html">
+	<div class="container">
+		<div style="border: 1px solid #ddd;padding:5px">
+			<div class="row">
+				<div class="col-md-6">
+					<a class="btn btn-danger" href="${ctx}/manager/logout">退出</a>
+				</div>
+				<div class="col-md-6">
+					<div class="row">
+						<div class="form-inline" style="float: right; margin-right: 15px">
+							<div class="input-group">
+								<span class="input-group-addon">会员名</span> 
+									<input type="text"
+									class="form-control" style="width: 80px; margin-right: 5px"
+									id="search_username" name="search_username" />
+							</div>
+							<button class="btn btn-default" onclick="load_data_member()">查找</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<table class="table  table-striped  table-bordered">
+				<caption class="text-center" style="font-size: 20px">会员列表</caption>
+				<thead>
+					<tr>
+						<th>账号</th>
+						<th>邮箱</th>
+						<th>是否卖家</th>
+						<th>禁止操作</th>
+						<th>冻结账号</th>
+						<th>注册时间</th>
+						<th>激活时间</th>
+						<th>最后一次登陆IP</th>
+						<th>最后一次登录时间</th>
+						<th>修改时间</th>
+					</tr>                                                                                                   
+				</thead>                                                                                                    
+				<tbody id="shop_dish_table_tbody">                                                                          
+		            <#--此处添加菜品列表数据html-->                                                                                                        
+				</tbody>
+			</table>
+			
+			<#-- 分页条-->
+			<div id="shop_dish_pagebar" class="row" style="vertical-align: middle;">
+				<#--此处添加分页条数据html-->
+			</div>
+		</div>
+	</div>
+</body>
+ <script type="text/javascript">
+	
+	// 加载会员列表数据，填充html。
+	function load_data_member(pageIndex,pageSize){
+		var params = '';
+		if((pageIndex || pageIndex===0) && pageSize){
+			params += '&pageIndex='+pageIndex+'&pageSize='+pageSize;
+		}
+		var member_username = $('#search_username').val();
+		if(member_username){
+			params += '&username='+member_username;
+		}
+		$.ajax({
+			url:'${ctx}/manager/memberListData',
+			type:'post',
+			dataType:'json',
+			data:params,
+			success:function(pb){
+				// 填充菜品列表ul的html
+				render_member_list(pb);
+				// 填充分页条的html
+				render_member_pagebar(pb);
+			},
+			error:function(){
+				alert('请求失败');
+			}
+		})
+	}
+	
+	// 添加菜品列表的html
+	function render_member_list(pb){
+		if(!pb || !pb.data || pb.data.length==0){
+			var shop_dish_table_tbody_emtpy = '<tr><td colspan="8">没有找到菜单数据</td></tr>';
+			$('#shop_dish_table_tbody').html(shop_dish_table_tbody_emtpy);
+			return;
+		}
+		var data = pb.data;
+		var shop_dish_table_tbody_html='';
+		for(var i in data){
+			var member = data[i];
+			var shop_dish_tr_html = '';
+			shop_dish_tr_html +='<tr>                                                                                                                            ';
+			shop_dish_tr_html +='	<td>'+member.username+'</td>                                                                                                               ';
+			shop_dish_tr_html +='	<td>'+member.email+'</td>                                                                                                               ';
+			shop_dish_tr_html +='	<td>'+(member.isSeller?'是':'否')+'</td>                                                                                                               ';
+			shop_dish_tr_html +='	<td>'+(member.isForbidden?'是':'否')+'</td>                                                                                                               ';
+			shop_dish_tr_html +='	<td>'+(member.isFrozen?'是':'否')+'</td>                                                                                                               ';
+			shop_dish_tr_html +='	<td>'+member.regTime+'</td>                                                                                                               ';
+			shop_dish_tr_html +='	<td>'+(member.activateTime)+'</td>                                                                                                               ';
+			shop_dish_tr_html +='	<td>'+(member.loginIp)+'</td>                                                                                                               ';
+			shop_dish_tr_html +='	<td>'+member.loginTime+'</td>                                                                                                               ';
+			shop_dish_tr_html +='	<td>'+member.modifyTime+'</td>                                                                                                               ';
+		/*shop_dish_tr_html +='	<td>                                                                                                                          ';
+			shop_dish_tr_html +='		<button role="button" class="btn btn-primary btn-sm" onclick="dish_edit('+dish.id+')">编辑</button>  '; 
+			shop_dish_tr_html +='		<a onclick="dish_remove('+dish.id+');" role="button" class="btn btn-primary btn-sm" href="#">删除</a>                                ';
+			shop_dish_tr_html +='	</td>                                                                                                                         ';
+			shop_dish_tr_html +='</tr>  ';*/
+			shop_dish_table_tbody_html +=  shop_dish_tr_html; 
+		}
+		$('#shop_dish_table_tbody').html(shop_dish_table_tbody_html);
+	}
+	
+	// 填充菜单列表的分页条
+	function render_member_pagebar(pb){
+		var html_pagebar = '';                                                                                                       
+		html_pagebar +='<div class="col-sm-6">                                                                                       ';
+		html_pagebar +='<h4>                                                                                                         ';
+		html_pagebar +='	<span class="label label-default">共'+pb.total+'条记录,当前第'+(pb.pageIndex+1)+' / '+pb.totalPage+'页</span>         ';
+		html_pagebar +='</h4>                                                                                                        ';
+		html_pagebar +='</div>                                                                                                       ';
+		html_pagebar +='<div class="col-sm-6">                                                                                       ';
+		html_pagebar +='	<ul class="pager" style="margin-top:5px;margin-bottom:5px;float: right">                                 ';
+		if(pb.pageIndex===0){
+			html_pagebar +='		<li class="disabled"><a href="#">首页</a></li>                                                         ';
+		}else{
+			html_pagebar +='		<li><a href="javascript:load_data_member(0,'+pb.pageSize+');">首页</a></li>                                                      ';
+		}
+		if(pb.pageIndex===pb.previousIndex){
+			html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">上一页</a></li>                               ';
+		}else{
+			html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data_member('+pb.previousIndex+','+pb.pageSize+');">上一页</a></li>          ';
+		}
+		if(pb.pageIndex===pb.nextPageIndex){
+			html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">下一页</a></li>                               ';
+		}else{
+			html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data_member('+pb.nextPageIndex+','+pb.pageSize+');">下一页</a></li>          ';
+		}
+		if(pb.pageIndex===pb.lastPageIndex){
+			html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">尾页</a></li>                                ';
+		}else{
+			html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data_member('+pb.lastPageIndex+','+pb.pageSize+');">尾页</a></li>           ';
+		}
+		html_pagebar +='	</ul>                                                                                                    ';
+		html_pagebar +='</div>                                                                                                       ';
+		$('#shop_dish_pagebar').html(html_pagebar).show();  
+	}
+	
+	// 调用函数加载会员列表数据
+	load_data_member();
+</script> 

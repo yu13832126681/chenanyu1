@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>订单确认</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/bootstrap.extend.js"></script>
+<script type="text/javascript">
+
+	//提交订单
+	function order_commit(){
+		var checked = $('#new_address').prop("checked");
+		var receiver = $('#receiver').val();
+		var address = $('#address').val();
+		if(checked){
+			$.ajax({
+				url:'${ctx}/member/addressAddSave',
+				type:'post',
+				dataType:'json',
+				data: {'receiver':receiver,'address':address},
+				success:function(res){
+					if(res.success){
+						
+					}else{
+						alert(res.message);
+					}
+				},
+				error:function(){
+					
+				}
+			});
+		}
+		var form_data = $('#order_form').serialize();
+		$.ajax({
+			url:'${ctx}/order/commit',
+			type:'post',
+			dataType:'json',
+			data: form_data,
+			success:function(res){
+				if(res.success){
+					window.location="${ctx}/order/list";
+					
+				}else{
+					alert(res.message);
+				}
+			},
+			error:function(){
+				
+			}
+		});
+	}
+	
+</script>
+</head>
+<body style="margin: 10px">
+	<#include "/ftl/header.html">
+
+	<div class="container">
+		<p style="margin-bottom: 0px"><h3>提交订单</h3></p>
+		<#-- 分隔线 -->
+		<hr style="height: 5px; margin-top: 5px; margin-bottom: 5px; border: none; border-top: 5px ridge green;" />
+		
+		<#-- 表头 -->
+		<div class="row" style="margin-left:0px;margin-right:0px">
+			<table class="table" id="table_header" >
+				<thead  style="background: #EEEEEE">
+					<tr>
+						<th width="40%" valign="top" >商品</th>
+						<th width="20%" valign="top" class="text-center">价格</th>
+						<th width="20%" valign="top" class="text-center">数量</th>
+						<th width="20%" valign="top" class="text-center">小计(元)</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		
+		<#-- 循环购物车中的店铺 -->
+		<#assign shopmap=session_order.getShopItemsForStringKey()>  <#-- 在购物车中取到cartShops的map -->
+		<#list shopmap?keys as shopId>  <#-- 循环店铺 -->
+			<#assign shopVo=shopmap[shopId]>
+				<div class="row" style="margin-left:0px;margin-right:0px">
+					<table class="table">
+						<caption style="margin-left: 8px">${shopVo.shop.sname}</caption>
+						<tbody style="background: #FFF4E8">
+							<#assign dishmap=shopVo.getDishItemsForStringKey()>  <#-- 在cartShops中取到dishItems的map -->
+							<#list dishmap?keys as dishId>  <#-- 循环菜品 -->
+								<#assign dishVo=dishmap[dishId]>
+								<tr>
+									<td width="40%" valign="top">
+										<table style="width: 100%">
+											<tr>
+												<td valign="top" width="20%">
+													<img width="50" class="img-thumbnail" src="${ctx}/res/img/default.png">
+												</td>
+												<td valign="top">
+													<a style="text-decoration: none; color: black" target="_blank" href="${ctx}/dish/index.action?dishId=${dishVo.dish.id}">
+														<div style="font-size: 15px">${dishVo.dish.dname}</div>
+													</a>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td width="20%" valign="top" class="text-center">
+										${dishVo.dish.price}
+									</td>
+									<td width="20%" align="center" valign="top" class="text-center">
+										${dishVo.num}
+									</td>
+									<td width="20%" valign="top" class="text-center">
+										${dishVo.num * dishVo.dish.price}
+									</td>
+								</tr>
+							</#list>
+						</tbody>
+					</table>
+				</div>
+		</#list>
+		
+		<#-- 输入框填写收货人和地址 -->
+		<div class="row" style="margin-left:0px;margin-right:0px;">
+			<form id="order_form" class="form-horizontal" role="form">
+				<div class="form-group">
+					<label for="receiver" class="col-md-1 control-label" style="text-align: left">收货人</label>
+					<div class="col-md-11">
+						<input type="text" class="form-control" style="width: 200px"
+							id="receiver" name="receiver" placeholder="请输入收货人姓名">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="address" class="col-md-1 control-label" style="text-align: left">收货地址</label>
+					<div class="col-md-11">
+						<input type="text" class="form-control" id="address" name="address"
+						placeholder="请输入收货地址">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="address" class="col-md-1 control-label" style="text-align: left"></label>
+					<input type="checkbox" id="new_address" >&nbsp添加到常用地址
+				</div>
+			</form>
+		</div>
+		<#-- 显示收货地址 -->
+		<ul class="list-group" id="order_list_ul" >
+			<#list address as ad>
+				<li class="list-group-item" style="border: 0px; margin-top: 1px; padding-top: 2px; padding-bottom: 2px">
+					<div class="row">
+						<table class="table" id="table_body" style="margin-bottom: 5px">
+							<tbody style="background: #EEEEEE">
+								<tr>
+									<td width="10%" valign="top">
+										<input type="radio" name="submit_address" onclick="check_address()"
+											<#if ad.isDefault==1>checked="checked"</#if>/>
+									</td>
+									<td width="10%" valign="top">${ad.receiver}</td>
+									<td width="60%" valign="top">${ad.address}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</li>
+			</#list>
+		</ul>
+		
+		<#-- 显示总金额等信息 -->
+		<div class="row" style="margin-left:0px;margin-right:0px;height:60px;border:1px solid #EEE;margin-top:5px;padding-top:5px">
+			<div class="col-md-2 col-md-offset-2" >
+				订单共<span style="color: red;">${session_order.totalNum}</span>件菜品
+			</div>
+			<div class="col-md-2">
+				菜品总金额:<span style="color:red;padding-left:2px;padding-right:2px;">${session_order.totalPrice}</span>
+			</div>
+			<div class="col-md-2" > 
+				运费:<span style="color:red;padding-left:2px;padding-right:2px;">
+						¥${session_order.totalFreight}
+					</span>
+			</div>
+			<div class="col-md-2" > 
+				订单总金额:<span style="color:red;padding-left:2px;padding-right:2px;">
+						¥${session_order.totalPrice+session_order.totalFreight}
+					</span>
+			</div>
+			<div class="col-md-2">
+				<button type="button" class="btn btn-lg btn-danger" style="float:right;width:100px" onclick="order_commit()">提交订单</button>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		
+		// 点击单选款更换地址
+		function check_address(){
+			var radio = $('input:checked').parent();
+			var receiver = radio.next().html();
+			var address = radio.next().next().html();
+			$('#receiver').attr("value",receiver)
+			$('#address').attr("value",address)
+		}
+	
+	
+		// 刷新页面填入默认地址
+		$(function(){
+			var radio = $('input:checked').parent();
+			var receiver = radio.next().html();
+			var address = radio.next().next().html();
+			$('#receiver').attr("value",receiver)
+			$('#address').attr("value",address)
+		})
+	
+	
+	</script>
+</body>
+</html>

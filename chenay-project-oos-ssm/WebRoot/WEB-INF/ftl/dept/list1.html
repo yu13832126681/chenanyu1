@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>部门列表</title> <#include "/ftl/include.html">
+<script type="text/javascript">
+function remove_row(dom,id){
+	$(dom).popover_confirm({
+		title:'提示',
+		content:'您确定要删除该条数据吗?',
+		confirm:function(){
+			remove_row_ajax(dom,id);
+		}
+	});
+}
+
+function remove_row_ajax(dom,id){
+	$.ajax({
+		url:'${ctx}/dept/remove',
+		type:'post',
+		dataType:'json',
+		data:'id='+id,
+		success:function(res){
+			$(dom).popover_alert({
+				title:'提示',
+				content:res.message,
+				confirm:function(){
+					if(res.success){
+						window.location='${ctx}/dept/list';
+					}
+				}
+			});
+// 			console.log('sdafsda');
+		},
+		error:function(){
+			$(dom).popover_alert({
+				title:'提示',
+				content:'请求失败'
+			});
+		}
+	});
+}
+
+<!-- 弹出窗口 2.给点按钮点击的函数,弹出窗口 -->
+//添加弹出窗口
+function add(){
+	$('#modal_dialogg_title').html('添加部门');//弹出窗口的标题
+	$('#modal_dialog_commit').html('提交').attr('onclick','addSave();');//弹出窗口的确认按钮的文字和函数
+	$('#modal_dialog_body').load('${ctx}/dept/add1');//弹出窗口的主题的html内容
+	$('#modal_dialog').modal({"backdrop":"static"}).modal('show'); //弹出窗口显示
+}
+
+<!-- 弹出窗口 3.弹出窗口的提交函数 -->
+//添加弹出窗口提交
+function addSave() {
+	var data = $('#form').serialize();
+	$.ajax({
+		url : '${ctx}/dept/addSave',
+		type : 'post',
+		dataType : 'json',
+		data : data,
+		success : function(res) {
+			if(res.success){
+// 				$('#modal_dialog').modal('hide');
+				window.location='${ctx}/dept/list1';
+			}else{
+				alert('添加失败');
+			}
+		},
+		error : function() {
+			alert('请求失败');
+		}
+	});
+}
+
+//编辑弹出窗口
+function edit(id){
+	$('#modal_dialogg_title').html('编辑部门');
+	$('#modal_dialog_commit').html('提交').attr('onclick','editSave();');
+	$('#modal_dialog_body').load('${ctx}/dept/edit1?id='+id);
+	$('#modal_dialog').modal({"backdrop":"static"}).modal('show'); 
+}
+
+//编辑弹出窗口提交
+function editSave() {
+	var data = $('#form').serialize();
+	$.ajax({
+		url : '${ctx}/dept/editSave',
+		type : 'post',
+		dataType : 'json',
+		data : data,
+		success : function(res) {
+			if(res.success){
+//				$('#modal_dialog').modal('hide');
+				window.location='${ctx}/dept/list1';
+			}else{
+				alert('编辑失败');
+			}
+		},
+		error : function() {
+			alert('请求失败');
+		}
+	});
+}
+</script>
+</head>
+<body style="margin: 5px">
+	<!-- <a class="btn btn-success btn-sm" href="${ctx}/dept/add">添加</a> -->
+	<!-- 弹出窗口 2.给点按钮点击的函数,弹出窗口add(); -->
+	<button type="button" class="btn btn-success btn-sm" onclick="add();">添加</button>
+	<table class="table table-bordered">
+		<caption>
+			<div class="text-center">
+				<h3>
+					<span class="label label-default">部门列表</span>
+				</h3>
+			</div>
+		</caption>
+		<thead>
+			<tr>
+				<#--
+				<th><input type="checkbox" id="select_all" onclick="selectAll()" /></th> -->
+				<th>名称</th>
+				<th>描述</th>
+				<th>责任人</th>
+				<th>区域</th>
+				<th>创建时间</th>
+				<th>修改时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<#list depts as d>
+			<tr>
+				<#--
+				<td><input type="checkbox" name="ids" value="${d.id}" /></td> -->
+				<td>${d.dname!""}</td>
+				<td>${d.ddesc!""}</td>
+				<td>${d.leader!""}</td>
+				<td>${d.loc!""}</td>
+				<td>${(d.createTime?string("yyyy-MM-dd HH:mm:ss"))!""}</td>
+				<td>${(d.modifyTime?string("yyyy-MM-dd HH:mm:ss"))!""}</td>
+				<td>
+					<!-- <a class="btn btn-default btn-xs" href="${ctx}/dept/edit?id=${d.id}">编辑</a>  -->
+					<button class="btn btn-default btn-xs" onclick="edit(${d.id});">编辑</button> 
+					<a class="btn btn-danger btn-xs" data-container="body" data-toggle="popover" data-placement="top" onclick="remove_row(this,${d.id});">删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+
+	<!-- 弹出窗口 1.添加div -->
+	<div id="modal_dialog" class="modal fade"  tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" >
+			<div class="modal-content"> 
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="modal_dialogg_title"></h4>
+				</div>
+				<div class="modal-body" id="modal_dialog_body"></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id="modal_dialog_commit"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<#include "/ftl/pagebar.html">
+</body>
+</html>

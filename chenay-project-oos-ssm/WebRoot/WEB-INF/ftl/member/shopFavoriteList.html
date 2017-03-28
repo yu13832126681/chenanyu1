@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>店铺收藏</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/bootstrap.extend.js"></script>
+</head>
+<body style="margin: 10px;overflow: scroll;min-height:2000px">
+	<#include "/ftl/header.html">
+	<div class="container">
+		<p style="margin-top:5px;margin-bottom: 0px">店铺收藏列表</p>
+		<!-- 分隔线 -->
+		<hr
+			style="height: 5px; margin-top: 5px; margin-bottom: 5px; border: none; border-top: 5px ridge green;" />
+		<!-- 列表数据 -->
+		<ul class="list-group" id="order_list_ul" >
+			<li class="list-group-item" style="border: 0px; margin-top: 1px; padding-top: 2px; padding-bottom: 2px">
+				<div class="row">
+					<table class="table" id="table_header" style="margin-bottom: 5px">
+						<thead style="background: #EEEEEE">
+							<tr>
+								<th width="40%" valign="top">店铺</th>
+								<th width="20%" valign="top" class="text-center">操作</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</li>
+			<li class="list-group-item" style="border: 0px; margin-top: 1px; padding-top: 2px; padding-bottom: 2px">
+				<div class="row"> 
+					<table class="table">
+						<tbody style="background: #FFF4E8">
+							<#list shopFavorite as sf>
+							<tr>
+								<td width="40%" valign="top" >
+									<table style="width: 100%" >
+										<tr>
+											<td valign="top" width="20%" >
+												<img width="50" class="img-thumbnail" src="${ctx}/res/img/default.png">
+											</td>
+											<td valign="top">店铺名：${sf.shop.sname}</td>
+										</tr>
+									</table>
+								</td>
+								<td width="20%" valign="top" class="text-center">
+									<button type="button" class="btn btn-primary" onclick="abolish_favorite(${sf.shopId})">取消收藏</button>
+								</td>
+							</tr>
+							</#list> 
+						</tbody>
+					</table>
+				</div>
+			</li>
+		</ul>
+	</div>
+		<!-- 分页条 -->
+		
+	<script type="text/javascript">
+		
+		// 取消收藏
+		function abolish_favorite(shopId){
+			$.ajax({
+				url:'${ctx}/member/abolishFavorite',
+				type:'post',
+				dataType:'json',
+				data: 'shopId='+shopId,
+				success:function(res){
+					if(res){
+						window.location="${ctx}/member/shopFavoriteList";
+					}else{
+						alert('操作失败');
+					}
+				}
+			});
+		}
+	</script>
+</body>
+</html>

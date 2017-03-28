@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>在线订餐首页</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script type="text/javascript" src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script type="text/javascript" src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+</head>
+<body>
+	<#-- 页面主题内容,页面容器 -->
+	<div class="container">
+		<#include "/ftl/header.html">
+		<#--<ul id="index_ul_shops" class="list-group">
+			<li class="list-group-item" style="border: 0px">
+				<div class="row">
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</li>
+			<li class="list-group-item" style="border: 0px">
+				<div class="row">
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> 
+										<img width="10" src="${ctx}/res/img/star.png" /> 
+										<img width="10" src="${ctx}/res/img/star.png" /> 
+										<img width="10" src="${ctx}/res/img/star.png" /> 
+										<img width="10" src="${ctx}/res/img/star.png" /> 
+										销量<span style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</li>
+			<li class="list-group-item" style="border: 0px">
+				<div class="row">
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</li>
+			<li class="list-group-item" style="border: 0px">
+				<div class="row">
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</li>
+			<li class="list-group-item" style="border: 0px">
+				<div class="row">
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> 
+										<img width="10" src="${ctx}/res/img/star.png" /> 
+										<img width="10" src="${ctx}/res/img/star.png" /> 
+										<img width="10" src="${ctx}/res/img/star.png" /> 
+										<img width="10" src="${ctx}/res/img/star.png" /> 
+										销量<span style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-3" style="padding: 5px">
+						<table style="border: 0px">
+							<tr>
+								<td width="20%" valign="top"><img width="50"
+									src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>
+								<td valign="top" style="font-size: 11px; padding-left: 5px">
+									<div style="font-size: 15px">沙县小吃</div>
+									<div>
+										<img width="10" src="${ctx}/res/img/star.png" /> <img
+											width="10" src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> <img width="10"
+											src="${ctx}/res/img/star.png" /> 销量<span
+											style="padding-left: 5px">20</span>
+									</div>
+									<div>
+										配送20元 <span style="padding-left: 2px; padding-right: 2px">|</span>
+										50元免运费
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</li>
+		</ul> -->
+		
+		
+		<#-- 店铺列表数据 -->
+		<ul id="index_ul_shops" class="list-group"></ul>
+		
+		 <#-- <div class="row" style="vertical-align: middle;">
+			<div class="col-md-6">
+				<h4><span class="label label-default">共32条记录,当前第1/2页</span></h4>
+			</div>
+			<div class="col-md-6">
+				 分页条 class="pager"的样式margin: 20px 0;
+				<ul id="ul_pager" class="pager" style="margin-top:5px;margin-bottom:5px;float: right">
+					<li class="disabled"><a href="#">首页</a></li>
+					<li class="disabled"><a href="#">上一页</a></li>
+					<li class="disabled"><a href="#">下一页</a></li>
+					<li class="disabled"><a href="#">尾页</a></li>
+				</ul>
+			</div> 
+		</div> -->
+	
+		<#-- 分页条 -->
+		<div id="index_pagebar" class="row" style="vertical-align: middle;"></div>
+	</div>
+
+	<script type="text/javascript">
+		function load_data(rowSize,pageIndex,pageSize){
+			var params='';
+			if((pageIndex || pageIndex===0) && pageSize){
+				params +='pageIndex='+pageIndex+'&pageSize='+pageSize;
+			} 
+			$.ajax({
+				url:'${ctx}/shop/listData',
+				type:'post',
+				dataType:'json',
+				data:params,
+				success:function(pb){
+					index_ul_html(rowSize,pb);
+					index_pager_html(rowSize,pb);
+				}
+			});
+		}
+		
+		//根据服务端返回的json格式的数据填充页面ul里面的Html
+		/*填充店铺列表ul的html
+		 * @rowSize 每行个数
+		 * @pb 分页数据
+		 */
+		function index_ul_html(rowSize,pb){
+			//如果没有加载到数据
+			if(!pb || !pb.data || pb.data.length==0){
+				var ul_html_emtpy = '<li class="list-group-item" style="border:0px">没有找到店铺数据</li>';
+				$('#index_ul_shops').html(ul_html_emtpy);
+				return;
+			}
+			var data = pb.data;//分页数据,数组
+			var num = data.length;//当前页的个数
+			var ul_html='';//店铺列表数据ul的html
+			//给定第一行首
+			ul_html+='<li class="list-group-item" style="border: 0px">';
+			ul_html+='<div class="row">';
+			for(var i in data){
+				var shop = data[i];
+				//得到每个店铺的html
+				var shop_html = index_ul_li_shop_html(shop);
+				//添加店铺的html
+				ul_html += shop_html;
+				
+				//每逢行尾的时候,能整除 每行个数rowSize,且不是当前页的最后一个
+				//这时候需要换行,需要添加</li><li>
+				//因为i从0开始数数,所以每行最后一个(i对rowSize求余是rowSize-1)
+				//比如,每行4个,第8个,i=7,7%4=3; 
+				if(i % rowSize == rowSize-1 && i !== num-1){
+					//添加当前行结束的内容
+					ul_html+='</div>';
+					ul_html+='</li>';
+					//添加下一行开始的内容
+					ul_html+='<li class="list-group-item" style="border:0px">';
+					ul_html+='<div class="row">';
+				}
+			}
+			//给定最后行尾
+			ul_html+='</div>';
+			ul_html+='</li>';
+			$('#index_ul_shops').html(ul_html);
+		}
+		
+		//填充店铺列表ul的每行的每个店铺的html
+		function index_ul_li_shop_html(shop){
+			var shop_html = '';
+			shop_html += '';
+			//<!-- 使用网格系统,一行12列,分成4块,每块3列 -->
+			shop_html += '<div class="col-md-3">                                              ';
+			shop_html += '<a style="text-decoration:none;color:black"  target="_blank" href="${ctx}/shop/index?shopId='+shop.id+'">                                              ';
+			shop_html += '<div style="border:1px solid white;padding:5px" onmouseover="this.style.border=\'1px solid red\'" onmouseout="this.style.border=\'1px solid white\'">                                              ';
+			shop_html += '	<table style="border: 0px">                                                            ';
+			shop_html += '		<tr>                                                                               ';
+			shop_html += '			<td width="20%" valign="top"><img width="50"                                   ';
+			if(shop.pic){
+				shop_html += '				src="${ctx}/res/img/'+shop.pic+'" class="img-thumbnail" /></td>             ';
+			}else{
+				shop_html+='				src="${ctx}/res/img/default.png" class="img-thumbnail" /></td>             ';
+			}
+			shop_html += '			<td valign="top" style="font-size: 11px; padding-left: 5px">                   ';
+			shop_html += '				<div style="font-size: 15px">'+shop.sname+'</div>                                    ';
+			shop_html += '				<div>                                                                      ';
+			shop_html += '					<img width="10" src="${ctx}/res/img/star.png" />                       ';
+			shop_html += '					<img width="10" src="${ctx}/res/img/star.png" />                       ';
+			shop_html += '					<img width="10" src="${ctx}/res/img/star.png" />                       ';
+			shop_html += '					<img width="10" src="${ctx}/res/img/star.png" />                       ';
+			shop_html += '					<img width="10" src="${ctx}/res/img/star.png" />                       ';
+			shop_html += '					销量<span style="padding-left: 5px">20</span>                            ';
+			shop_html += '				</div>                                                                     ';
+			shop_html += '				<div>                                                                      ';
+			shop_html += '					配送'+shop.freight+'元 <span style="padding-left: 2px; padding-right: 2px">|</span>     ';
+			shop_html += '					'+shop.freeFreightAmount+'元免运费                                                                 ';
+			shop_html += '				</div>                                                                     ';
+			shop_html += '			</td>                                                                          ';
+			shop_html += '		</tr>                                                                              ';
+			shop_html += '	</table>                                                                               ';
+			shop_html += '</div>                                                                                   ';
+			shop_html += '</a>                                                                                   ';
+			shop_html += '</div>                                                                                   ';
+			return shop_html;                                                                                      
+		}   
+		
+		//填充首页分页条的html
+		function index_pager_html(rowSize,pb){
+			//分页条的html
+			var html_pagebar = '';                                                                                                       
+			html_pagebar +='<div class="col-sm-6">                                                                                       ';
+			html_pagebar +='<h4>                                                                                                         ';
+			html_pagebar +='	<span class="label label-default">共'+pb.total+'条记录,当前第'+(pb.pageIndex+1)+' / '+pb.totalPage+'页</span>         ';
+			html_pagebar +='</h4>                                                                                                        ';
+			html_pagebar +='</div>                                                                                                       ';
+			html_pagebar +='<div class="col-sm-6">                                                                                       ';
+			html_pagebar +='	<ul class="pager" style="margin-top:5px;margin-bottom:5px;float: right">                                 ';
+			if(pb.pageIndex===0){
+				html_pagebar +='		<li class="disabled"><a href="#">首页</a></li>                                                         ';
+			}else{
+				html_pagebar +='		<li><a href="javascript:load_data('+rowSize+',0,'+pb.pageSize+');">首页</a></li>                                                      ';
+			}
+			if(pb.pageIndex===pb.previousIndex){
+				html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">上一页</a></li>                               ';
+			}else{
+				html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data('+rowSize+','+pb.previousIndex+','+pb.pageSize+');">上一页</a></li>          ';
+			}
+			if(pb.pageIndex===pb.nextPageIndex){
+				html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">下一页</a></li>                               ';
+			}else{
+				html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data('+rowSize+','+pb.nextPageIndex+','+pb.pageSize+');">下一页</a></li>          ';
+			}
+			if(pb.pageIndex===pb.lastPageIndex){
+				html_pagebar +='		<li class="disabled" style="margin-left: 5px"><a href="#">尾页</a></li>                                ';
+			}else{
+				html_pagebar +='		<li style="margin-left: 5px"><a href="javascript:load_data('+rowSize+','+pb.lastPageIndex+','+pb.pageSize+');">尾页</a></li>           ';
+			}
+			html_pagebar +='	</ul>                                                                                                    ';
+			html_pagebar +='</div>                                                                                                       ';
+			$('#index_pagebar').html(html_pagebar).show();  
+		}
+		
+		//加载店铺列表的数据
+		load_data(4);
+	</script>
+</body>
+</html>

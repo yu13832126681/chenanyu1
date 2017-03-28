@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>员工列表</title>
+<#include "/ftl/include.html">
+<script type="text/javascript">
+function remove_row(dom,id){
+	$(dom).popover_confirm({
+		title:'提示',
+		content:'您确定要删除该条数据吗?',
+		confirm:function(){
+			remove_row_ajax(dom,id);
+		}
+	});
+}
+
+function remove_row_ajax(dom,id){
+	$.ajax({
+		url:'${ctx}/emp/remove',
+		type:'post',
+		dataType:'json',
+		data:'id='+id,
+		success:function(res){
+			$(dom).popover_alert({
+				title:'提示',
+				content:res.message,
+				confirm:function(){
+					if(res.success){
+						window.location='${ctx}/emp/list';
+					}
+				}
+			});
+// 			console.log('sdafsda');
+		},
+		error:function(){
+			$(dom).popover_alert({
+				title:'提示',
+				content:'请求失败'
+			});
+		}
+	});
+}
+
+</script>
+</head>
+<body style="margin: 5px">
+	<a class="btn btn-success btn-sm" href="${ctx}/emp/add">添加</a>
+	<div class="row">
+	<form class="form-inline" role="form" action="${ctx}/emp/list" method="post"
+		style="margin-top:5px;margin-bottom:5px">
+		<div class="form-group">
+			<select class="form-control" id="search_dept_id" name="deptId">
+				<option value="">-部门-</option>
+				<#list depts as d>
+					<option value="${d.id}" <#if (searchVo.deptId)?? && searchVo.deptId==d.id>selected="selected"</#if> >${(d.dname)!""}</option>
+				</#list>
+			</select>
+		</div>
+		<div class="form-group">
+			<input type="text" id="search_ename" name="ename"
+				value="${(searchVo.ename)!""}"
+			 style="width:100px" placeholder="姓名"/>
+		</div>
+		<div class="form-group">
+			<select class="form-control" id="search_gender" name="gender">
+				<option value="">-性别-</option>
+				<option value="1" <#if (searchVo.gender)?? && searchVo.gender==1>selected="selected"</#if> >男</option>
+				<option value="0" <#if (searchVo.gender)?? && searchVo.gender==0>selected="selected"</#if> >女</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label>
+			出身日期范围:
+			<input type="text" id="search_birthdate_min" name="birthdateMin" value="${(searchVo.birthdateMin?string("yyyy-MM-dd"))!""}" style="width:100px" placeholder="最小"/>
+			<input type="text" id="search_birthdate_max" name="birthdateMax" value="${(searchVo.birthdateMax?string("yyyy-MM-dd"))!""}" style="width:100px" placeholder="最大" />
+			</label>
+		</div>
+		<button type="button" class="btn btn-default" onclick="goPage(0,true)">查询</button>
+	</form>
+	</div>
+ 	<table class="table table-bordered">
+ 		<caption>
+ 			<div class="text-center">
+ 				<h3><span class="label label-default">员工列表</span></h3>
+ 			</div>
+ 		</caption>
+ 		<thead>
+	      <tr>
+	      	<!-- id,dept_id,ename,gender,birthdate,skill,enter_date,create_time,modify_time -->
+			<th>部门</th>
+			<th>姓名</th>
+			<th>性别</th>
+			<th>出身日期</th>
+			<th>技能</th>
+			<th>加入日期</th>
+			<th>操作</th>
+	      </tr>
+	   </thead>
+	   <tbody>
+		<#list emps as e>
+			<tr>
+				<td>${(e.dept.dname)!""}</td>
+				<td>${(e.ename)!""}</td>
+				<td>
+					<#if e?? && e.gender??>
+						<#if e.gender==1>男</#if>
+						<#if e.gender==0>女</#if>
+					</#if>
+				</td>
+				<td>${(e.birthdate?string("yyyy-MM-dd"))!""}</td>
+				<td>${(e.skill)!""}</td>
+				<td>${(d.enterDate?string("yyyy-MM-dd"))!""} </td>
+				<td>
+					<a class="btn btn-default btn-xs" href="${ctx}/emp/edit?id=${e.id}">编辑</a>
+					<a class="btn btn-danger btn-xs" data-container="body" 
+						data-toggle="popover" data-placement="top" onclick="remove_row(this,${e.id});">删除</a>
+				</td>
+			</tr>
+		</#list>
+		</tbody>
+	</table>
+	<#include "/ftl/pagebar.html">
+</body>
+</html>

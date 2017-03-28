@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>部门列表</title>
+<#include "/ftl/include.html">
+<script type="text/javascript">
+function remove_row(dom,id){
+	$(dom).popover_confirm({
+		title:'提示',
+		content:'您确定要删除该条数据吗?',
+		confirm:function(){
+			remove_row_ajax(dom,id);
+		}
+	});
+}
+
+function remove_row_ajax(dom,id){
+	$.ajax({
+		url:'${ctx}/dept/remove',
+		type:'post',
+		dataType:'json',
+		data:'id='+id,
+		success:function(res){
+			$(dom).popover_alert({
+				title:'提示',
+				content:res.message,
+				confirm:function(){
+					if(res.success){
+						window.location='${ctx}/dept/list';
+					}
+				}
+			});
+// 			console.log('sdafsda');
+		},
+		error:function(){
+			$(dom).popover_alert({
+				title:'提示',
+				content:'请求失败'
+			});
+		}
+	});
+}
+
+</script>
+</head>
+<body style="margin: 5px">
+	<a class="btn btn-success btn-sm" href="${ctx}/dept/add">添加</a>
+ 	<table class="table table-bordered">
+ 		<caption>
+ 			<div class="text-center">
+ 				<h3><span class="label label-default">部门列表</span></h3>
+ 			</div>
+ 		</caption>
+ 		<thead>
+	      <tr>
+	        <#-- <th><input type="checkbox" id="select_all" onclick="selectAll()"/></th> -->
+			<th>名称</th>
+			<th>描述</th>
+			<th>责任人</th>
+			<th>区域</th>
+			<th>创建时间</th>
+			<th>修改时间</th>
+			<th>操作</th>
+	      </tr>
+	   </thead>
+	   <tbody>
+		<#list depts as d>
+			<tr>
+				<#-- <td><input type="checkbox" name="ids" value="${d.id}"/></td> -->
+				<td>${d.dname!""}</td>
+				<td>${d.ddesc!""}</td>
+				<td>${d.leader!""}</td>
+				<td>${d.loc!""}</td>
+				<td>${(d.createTime?string("yyyy-MM-dd HH:mm:ss"))!""} </td>
+				<td>${(d.modifyTime?string("yyyy-MM-dd HH:mm:ss"))!""}</td>
+				<td>
+					<a class="btn btn-default btn-xs" href="${ctx}/dept/edit?id=${d.id}">编辑</a>
+					<a class="btn btn-danger btn-xs" data-container="body" 
+						data-toggle="popover" data-placement="top" onclick="remove_row(this,${d.id});">删除</a>
+				</td>
+			</tr>
+		</#list>
+		</tbody>
+	</table>
+	<#include "/ftl/pagebar.html">
+</body>
+</html>

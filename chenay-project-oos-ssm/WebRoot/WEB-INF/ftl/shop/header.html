@@ -1,0 +1,90 @@
+﻿<nav class="navbar navbar-default navbar-fixed-top" style="min-height: 25px;">
+	<div>
+		<p class="navbar-text navbar-left" style="margin-top: 2px; margin-bottom: 2px">
+			<#if session_member??>
+				<font color="red">${session_member.username},欢迎登录</font> 
+				<a class="navbar-link" style="margin-left: 5px; color: red" href="${ctx}/member/logout">注销</a>
+			<#else>
+				<a class="navbar-link" style="margin-left: 5px; color: red" href="${ctx}/member/login">亲,请登录</a> 
+				<a class="navbar-link" style="margin-left: 5px" href="${ctx}/member/reg">免费注册</a>
+			</#if>
+		</p>
+	</div>
+	<div>
+		<div class="navbar-text navbar-right" style="margin-top: 2px; margin-bottom: 2px; margin-right: 10px">
+			<a class="navbar-link" style="color: red; text-decoration: none" href="${ctx}/index">首页</a> 
+			<span class="dropdown">
+				<a class="btn dropdown-toggle" style="padding:0px 12px" id="dropdown-menu-link" data-toggle="dropdown">
+					我的订餐<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" style="min-width:100px;align:center" role="menu" aria-labelledby="dropdown-menu-link">
+					<#-- 购物车入口 -->
+					<li>
+						<a class="navbar-link" style="color: balck; text-decoration: none" href="javascript:cart_view()" >
+							 购物车(<span style="color: red" id="header_span_cart_num"></span>)
+						</a> 
+					</li>
+					<#-- 我的订单入口 -->
+					<li>
+						<a class="navbar-link" style="color: balck; text-decoration: none" href="${ctx}/order/list">我的订单</a> 
+					</li>
+					<#-- 店铺收藏入口 -->
+					<li>
+						<a class="navbar-link" style="color: balck; text-decoration: none" href="${ctx}/member/shopFavoriteList">收藏的店铺</a> 
+					</li>
+					<#-- 菜品收藏入口 -->
+					<li>
+						<a class="navbar-link" style="color: balck; text-decoration: none" href="${ctx}/member/dishFavoriteList">收藏的菜品</a> 
+					</li>
+					<#-- 收货地址入口 -->
+					<li>
+						<a class="navbar-link" style="color: balck; text-decoration: none" href="${ctx}/member/addressList">收货地址</a> 
+					</li>
+				</ul>
+			</span>
+			<span class="dropdown">
+				<a class="btn dropdown-toggle" style="padding:0px 12px" id="dropdown-menu-link" data-toggle="dropdown">
+					卖家中心<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" style="min-width:100px;align:center" role="menu" aria-labelledby="dropdown-menu-link">
+					<#-- 免费开店入口 -->
+					<li>
+						<a class="navbar-link" style="color: balck; text-decoration: none" href="${ctx}/manager/applyShop">免费开店</a> 
+					</li>
+				</ul>
+			</span>
+			<a class="navbar-link" style="color: green; text-decoration: none" href="${ctx}/manager/login">平台管理员入口</a>
+		</div>
+		
+	</div>
+</nav>
+
+<#-- 让页面主体内容空出导航栏的高度 -->
+<div style="height: 25px;"></div>
+	
+<script type="text/javascript">
+	function header_cart_change() {
+		$('#header_span_cart_num').load('${ctx}/cart/getCartTotalNum');
+	}
+	header_cart_change();
+	
+	// 跳转到购物车(未登录情况下，登陆后直接跳到购物车页面。)
+	function cart_view(){
+		$.ajax({
+			url:'${ctx}/cart/view',
+			type:'post',
+			dataType:'json',
+			data:a=1,
+			success:function(res){
+				if(res.success){
+					window.location='${ctx}/'+res.message+'1';
+				}else{
+					window.location='${ctx}/member/login?url='+res.message;
+				}
+			},
+			error:function(){
+				alert('请求失败')
+			}
+		});
+	}
+</script>

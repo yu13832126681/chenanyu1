@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oos.mapper.ShopFavoriteMapper">
+	<resultMap id="BaseResultMap" type="com.oos.model.ShopFavorite">
+		<id column="Id" property="id" jdbcType="INTEGER" />
+		<result column="member_id" property="memberId" jdbcType="BIGINT" />
+		<result column="shop_id" property="shopId" jdbcType="BIGINT" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		Id, member_id, shop_id
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.oos.model.ShopFavoriteExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from shop_favorite
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from shop_favorite
+		where Id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		shop_favorite
+		where Id = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.oos.model.ShopFavoriteExample">
+		delete from shop_favorite
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.oos.model.ShopFavorite">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into shop_favorite (member_id, shop_id)
+		values
+		(#{memberId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.oos.model.ShopFavorite">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into shop_favorite
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="memberId != null">
+				member_id,
+			</if>
+			<if test="shopId != null">
+				shop_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="memberId != null">
+				#{memberId,jdbcType=BIGINT},
+			</if>
+			<if test="shopId != null">
+				#{shopId,jdbcType=BIGINT},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.oos.model.ShopFavoriteExample"
+		resultType="java.lang.Integer">
+		select count(*) from shop_favorite
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update shop_favorite
+		<set>
+			<if test="record.id != null">
+				Id = #{record.id,jdbcType=INTEGER},
+			</if>
+			<if test="record.memberId != null">
+				member_id = #{record.memberId,jdbcType=BIGINT},
+			</if>
+			<if test="record.shopId != null">
+				shop_id = #{record.shopId,jdbcType=BIGINT},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update shop_favorite
+		set Id = #{record.id,jdbcType=INTEGER},
+		member_id =
+		#{record.memberId,jdbcType=BIGINT},
+		shop_id =
+		#{record.shopId,jdbcType=BIGINT}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.oos.model.ShopFavorite">
+		update shop_favorite
+		<set>
+			<if test="memberId != null">
+				member_id = #{memberId,jdbcType=BIGINT},
+			</if>
+			<if test="shopId != null">
+				shop_id = #{shopId,jdbcType=BIGINT},
+			</if>
+		</set>
+		where Id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.oos.model.ShopFavorite">
+		update
+		shop_favorite
+		set member_id = #{memberId,jdbcType=BIGINT},
+		shop_id =
+		#{shopId,jdbcType=BIGINT}
+		where Id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectPage" resultMap="BaseResultMap"
+		parameterType="com.oos.model.ShopFavoriteExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from shop_favorite
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		limit #{pageIndex},#{pageSize}
+	</select>
+
+	<!-- 引入shop表 -->
+	<resultMap id="ShopResultMap" type="com.oos.model.Shop">
+		<id column="shop_id" property="id" jdbcType="BIGINT" />
+		<result column="member_id" property="memberId" jdbcType="BIGINT" />
+		<result column="sname" property="sname" jdbcType="VARCHAR" />
+		<result column="pic" property="pic" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="tel" property="tel" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="freight" property="freight" jdbcType="DOUBLE" />
+		<result column="free_freight_amount" property="freeFreightAmount"
+			jdbcType="DOUBLE" />
+		<result column="wait_minutes" property="waitMinutes" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="ShopFavoriteResultMap" type="com.oos.model.ShopFavorite">
+		<id column="Id" property="id" jdbcType="INTEGER" />
+		<result column="member_id" property="memberId" jdbcType="BIGINT" />
+		<result column="shop_id" property="shopId" jdbcType="BIGINT" />
+		<association property="shop" column="shop_id" javaType="com.oos.model.Shop"
+			resultMap="ShopResultMap" />
+	</resultMap>
+
+	<!-- 通过memberId获取店铺收藏信息 -->
+	<select id="getByMemberId" resultMap="ShopFavoriteResultMap"
+		parameterType="java.lang.Long">
+		select sf.*,s.sname
+		from shop_favorite sf left join shop
+		s on sf.shop_id=s.id
+		where
+		sf.member_id = #{memberId,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 取消收藏，通过memberId和shopId删除表中数据 -->
+	<delete id="deleteByMSId" parameterType="map">
+		delete from
+		shop_favorite
+		where member_id = #{memberId,jdbcType=INTEGER} and
+		shop_id = #{shopId,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 通过memberId和shopId查找表中数据 -->
+	<select id="getByMSId" resultMap="ShopFavoriteResultMap"
+		parameterType="map">
+		select sf.*,s.sname
+		from shop_favorite sf left join shop
+		s on sf.shop_id=s.id
+		where
+		sf.member_id = #{memberId,jdbcType=VARCHAR}
+		and sf.shop_id = #{shopId,jdbcType=INTEGER}
+	</select>
+</mapper>

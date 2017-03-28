@@ -1,0 +1,52 @@
+<input type="hidden" name="id" value="${dish.id}"/>
+<div class="form-group">
+	<label for="dish.dname" class="col-sm-3 control-label">名称</label>
+	<div class="col-sm-9">
+		<input type="text" class="form-control" id="dish.dname" name="dname"
+			value="${dish.dname}"
+			placeholder="请输入菜名">
+	</div>
+</div>
+<div class="form-group">
+	<label for="dish.ddesc" class="col-sm-3 control-label">描述</label>
+	<div class="col-sm-9">
+		<input type="text" class="form-control" id="dish.ddesc" name="ddesc"
+		value="${dish.ddesc}"
+			placeholder="请输入描述">
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-3 control-label">上下架状态</label>
+	<div class="col-sm-9">
+		<div class="radio">
+			<label>
+				<input type="radio" name="status" value="1" <#if dish.status==1>checked="checked"</#if>>上架
+			</label>
+			<label>
+				<input type="radio" name="status" value="0" <#if dish.status==0>checked="checked"</#if>>下架
+			</label>
+		</div>
+	</div>
+</div>
+<div class="form-group">
+	<label for="dish.price" class="col-sm-3 control-label">价格</label>
+	<div class="col-sm-9">
+		<div class="input-group">
+			<span class="input-group-addon">￥</span>
+			<input type="text" class="form-control" id="dish.price" name="price"
+				value="${dish.price}"
+				placeholder="请输入价格"/>
+		</div>
+	</div>
+</div>
+<div class="form-group">
+	<label for="dish.coupon" class="col-sm-3 control-label">优惠</label>
+	<div class="col-sm-9">
+		<div class="input-group">
+			<span class="input-group-addon">￥</span>
+			<input type="text" class="form-control" id="dish.coupon" name="coupon"
+				value="${dish.coupon}"
+				placeholder="请输入优惠金额"/>
+		</div>
+	</div>
+</div>

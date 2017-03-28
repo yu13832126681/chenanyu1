@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache"> 
+<meta http-equiv="cache-control" content="no-cache"> 
+<meta http-equiv="expires" content="0">   
+<title>重置密码</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/bootstrap.extend.js"></script>
+
+</head>
+<body style="margin: 10px">
+	<#include "/ftl/header.html">
+	<div class="container">
+		<p>重置密码</p>
+		<#-- 分隔线 -->
+		<hr style="height: 5px; margin-top: 5px; margin-bottom: 5px; border: none; border-top: 5px ridge green;" />
+		<div class="row" style="padding:15px">
+			<#if !message??>
+				重置密码成功,点击<a href="${ctx}/member/login">这里</a>登录
+			</#if>
+			<#if message??">
+				${message}
+			</#if>
+		</div>
+	</div>
+</body>
+</html>

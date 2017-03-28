@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oos.mapper.CommentMapper">
+	<resultMap id="BaseResultMap" type="com.oos.model.Comment">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="dish_id" property="dishId" jdbcType="BIGINT" />
+		<result column="member_id" property="memberId" jdbcType="BIGINT" />
+		<result column="score" property="score" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+		<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		id, dish_id, member_id, score, content, is_deleted,
+		write_time,
+		modify_time
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.oos.model.CommentExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from comment
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from comment
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		comment
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.oos.model.CommentExample">
+		delete from comment
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.oos.model.Comment">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into comment (dish_id, member_id, score,
+		content, is_deleted,
+		write_time,
+		modify_time)
+		values (#{dishId,jdbcType=BIGINT},
+		#{memberId,jdbcType=BIGINT},
+		#{score,jdbcType=INTEGER},
+		#{content,jdbcType=VARCHAR}, #{isDeleted,jdbcType=INTEGER},
+		#{writeTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.oos.model.Comment">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into comment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dishId != null">
+				dish_id,
+			</if>
+			<if test="memberId != null">
+				member_id,
+			</if>
+			<if test="score != null">
+				score,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted,
+			</if>
+			<if test="writeTime != null">
+				write_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="dishId != null">
+				#{dishId,jdbcType=BIGINT},
+			</if>
+			<if test="memberId != null">
+				#{memberId,jdbcType=BIGINT},
+			</if>
+			<if test="score != null">
+				#{score,jdbcType=INTEGER},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted,jdbcType=INTEGER},
+			</if>
+			<if test="writeTime != null">
+				#{writeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.oos.model.CommentExample"
+		resultType="java.lang.Integer">
+		select count(*) from comment
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update comment
+		<set>
+			<if test="record.id != null">
+				id = #{record.id,jdbcType=BIGINT},
+			</if>
+			<if test="record.dishId != null">
+				dish_id = #{record.dishId,jdbcType=BIGINT},
+			</if>
+			<if test="record.memberId != null">
+				member_id = #{record.memberId,jdbcType=BIGINT},
+			</if>
+			<if test="record.score != null">
+				score = #{record.score,jdbcType=INTEGER},
+			</if>
+			<if test="record.content != null">
+				content = #{record.content,jdbcType=VARCHAR},
+			</if>
+			<if test="record.isDeleted != null">
+				is_deleted = #{record.isDeleted,jdbcType=INTEGER},
+			</if>
+			<if test="record.writeTime != null">
+				write_time = #{record.writeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.modifyTime != null">
+				modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update comment
+		set id = #{record.id,jdbcType=BIGINT},
+		dish_id =
+		#{record.dishId,jdbcType=BIGINT},
+		member_id =
+		#{record.memberId,jdbcType=BIGINT},
+		score =
+		#{record.score,jdbcType=INTEGER},
+		content =
+		#{record.content,jdbcType=VARCHAR},
+		is_deleted =
+		#{record.isDeleted,jdbcType=INTEGER},
+		write_time =
+		#{record.writeTime,jdbcType=TIMESTAMP},
+		modify_time =
+		#{record.modifyTime,jdbcType=TIMESTAMP}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.oos.model.Comment">
+		update comment
+		<set>
+			<if test="dishId != null">
+				dish_id = #{dishId,jdbcType=BIGINT},
+			</if>
+			<if test="memberId != null">
+				member_id = #{memberId,jdbcType=BIGINT},
+			</if>
+			<if test="score != null">
+				score = #{score,jdbcType=INTEGER},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted = #{isDeleted,jdbcType=INTEGER},
+			</if>
+			<if test="writeTime != null">
+				write_time = #{writeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.oos.model.Comment">
+		update comment
+		set
+		dish_id = #{dishId,jdbcType=BIGINT},
+		member_id =
+		#{memberId,jdbcType=BIGINT},
+		score = #{score,jdbcType=INTEGER},
+		content
+		= #{content,jdbcType=VARCHAR},
+		is_deleted =
+		#{isDeleted,jdbcType=INTEGER},
+		write_time =
+		#{writeTime,jdbcType=TIMESTAMP},
+		modify_time =
+		#{modifyTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectPage" resultMap="BaseResultMap" parameterType="com.oos.model.CommentExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from comment
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		limit #{pageIndex},#{pageSize}
+	</select>
+
+	<!-- 通过shopId查询评论数量 -->
+	<select id="getTotalByShopId" parameterType="java.lang.Long"
+		resultType="java.lang.Integer">
+		select count(*) from comment c
+		left join dish d on
+		c.dish_id=d.id
+		left
+		join shop s on d.shop_id=s.id
+		where
+		s.id=#{shopId,jdbcType=BIGINT}
+	</select>
+
+	<!-- 查询店铺首页评论的分页数据 -->
+	<resultMap id="MemberResultMap" type="com.oos.model.Member">
+		<id column="member_id" property="id" jdbcType="BIGINT" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="is_seller" property="isSeller" jdbcType="INTEGER" />
+		<result column="is_forbidden" property="isForbidden" jdbcType="INTEGER" />
+		<result column="is_frozen" property="isFrozen" jdbcType="INTEGER" />
+		<result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
+		<result column="activate_time" property="activateTime"
+			jdbcType="TIMESTAMP" />
+		<result column="login_ip" property="loginIp" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="CommentResultMap" type="com.oos.model.Comment">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="dish_id" property="dishId" jdbcType="BIGINT" />
+		<result column="member_id" property="memberId" jdbcType="BIGINT" />
+		<result column="score" property="score" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+		<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+		<association property="member" column="member_id"
+			javaType="com.oos.model.Member" resultMap="MemberResultMap" />
+	</resultMap>
+	<select id="getByPage" resultMap="CommentResultMap"
+		parameterType="map">
+		select c.*,d.dname,m.username
+		from comment c
+		left join dish d on
+		c.dish_id=d.id
+		left join member m on c.member_id=m.id
+		where
+		shop_id=#{shopId,jdbcType=BIGINT}
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		<if test="start!=null and limit!=null">
+			limit #{start},#{limit}
+		</if>
+	</select>
+</mapper>

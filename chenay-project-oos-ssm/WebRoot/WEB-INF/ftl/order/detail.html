@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>订单详情</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/bootstrap.extend.js"></script>
+</head>
+<body style="margin: 10px">
+	<#include "/ftl/header.html">
+
+	<div class="container">
+		
+		<p style="margin-bottom: 0px"><h3>订单详情</h3></p>
+		<#-- 分隔线 -->
+		<hr style="height: 5px; margin-top: 5px; margin-bottom: 5px; border: none; border-top: 5px ridge green;" />
+		
+		<div class="row" style="margin-left:0px;margin-right:0px">
+			<table class="table" id="table_header" >
+				<thead  style="background: #EEEEEE">
+					<tr>
+						<th width="20%" valign="top" >商品</th>
+						<th width="20%" valign="top" >店铺</th>
+						<th width="20%" valign="top" class="text-center">价格</th>
+						<th width="20%" valign="top" class="text-center">数量</th>
+						<th width="20%" valign="top" class="text-center">评价</th>
+					</tr>
+				</thead>
+				<tbody style="background: #FFF4E8">
+					<#assign netorderdish=order.getNetOrderDish()>
+					<#list netorderdish as o>
+						<tr>
+							<td width="20%" valign="top">
+								<table style="width: 100%">
+									<tr>
+										<td valign="top" width="20%">
+											<img width="50" class="img-thumbnail" src="${ctx}/res/img/default.png">
+										</td>
+										<td valign="top">
+											<a style="text-decoration: none; color: black" target="_blank" href="${ctx}/dish/index.action?dishId=${o.dish.id}">
+												<div style="font-size: 15px">${o.dish.dname}</div>
+											</a>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td width="20%" valign="top">
+								${o.shop.sname}
+							</td>
+							<td width="20%" valign="top" class="text-center">
+								${o.price}
+							</td>
+							<td width="20%" align="center" valign="top" class="text-center">
+								${o.qty}
+							</td>
+							<td width="20%" align="center" valign="top" class="text-center">
+								<a type="button" class="btn btn-lg" href="${ctx}/shop/addComment?dishId=${o.dish.id}">待评价</a>
+							</td>
+						</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+			
+		<div class="row" style="margin-left:0px;margin-right:0px;height:60px;border:1px solid #EEE;margin-top:5px;padding-top:5px">
+			<div class="col-md-2 col-md-offset-2" >
+				订单共<span style="color: red;">${order.qty}</span>件菜品
+			</div>
+			<div class="col-md-2">
+				菜品总金额:<span style="color:red;padding-left:2px;padding-right:2px;">${order.total}</span>
+			</div>
+			<div class="col-md-2" > 
+				运费:<span style="color:red;padding-left:2px;padding-right:2px;">¥${order.freight}</span>
+			</div>
+			<div class="col-md-2">
+				收货人:<span style="color:red;padding-left:2px;padding-right:2px;">${order.receiver}</span>
+			</div>
+			<div class="col-md-2">
+				收货地址:<span style="color:red;padding-left:2px;padding-right:2px;">${order.address}</span>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

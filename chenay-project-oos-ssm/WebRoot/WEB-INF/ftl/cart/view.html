@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>购物车</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/bootstrap.extend.js"></script>
+</head>
+<body style="margin: 10px">
+	
+	<#include "/ftl/header.html">
+	
+	<#-- 界面整体 -->
+	<div class="container">
+		<p style="margin-bottom: 0px"><h3>购物车</h3></p>
+		<#-- 分隔线 -->
+		<hr style="height: 5px; margin-top: 5px; margin-bottom: 5px; border: none; border-top: 5px ridge green;" />
+		<#-- 如果购物车不为空隐藏此div -->
+		<div id="div_empty" class="text-center" <#if cart?? && (cart.totalNum>0)>style="display:none"</#if>>
+			购物车中空空如也
+		</div>
+		<#-- 如果购物车为空隐藏此div -->
+		<div id="div_data"  <#if !cart?? || (cart.totalNum=0)>style="display:none"</#if>>
+			<div class="row" style="margin-left:0px;margin-right:0px">
+				<table class="table" id="table_header" >
+					<thead  style="background: #EEEEEE">
+						<tr>
+							<th width="10%" valign="top" ><input type="checkbox" id="checkAll" onClick="checkAll()" />全选</th>
+							<th width="30%" valign="top" >商品</th>
+							<th width="15%" valign="top" class="text-center">价格</th>
+							<th width="15%" valign="top" class="text-center">数量</th>
+							<th width="15%" valign="top" class="text-center">小计(元)</th>
+							<th width="15%" valign="top" class="text-center">操作</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<#if cart??>
+			<#assign shopmap=cart.getShopItemsForStringKey()>  <#-- 在购物车中取到cartShops的map -->
+			<#list shopmap?keys as shopId>  <#-- 循环店铺 -->
+				<#assign shopVo=shopmap[shopId]>
+				<div class="row" style="margin-left:0px;margin-right:0px">
+					<table class="table">
+						<caption style="margin-left: 8px">
+							<input type="checkbox" onclick="check_shop_dish(this)"/>${shopVo.shop.sname}
+						</caption>
+						<tbody style="background: #FFF4E8">
+							<#assign dishmap=shopVo.getDishItemsForStringKey()>  <#-- 在cartShops中取到dishItems的map -->
+							<#list dishmap?keys as dishId>  <#-- 循环菜品 -->
+								<#assign dishVo=dishmap[dishId]>
+									<tr>
+									<td  width="10%"  valign="top"><input type="checkbox" name="dish_ids" value="${dishVo.dish.id}" onclick="getChecked()" /></td>
+									<td width="30%" valign="top">
+										<table style="width: 100%">
+											<tr>
+												<td valign="top" width="20%">
+													<img width="50" class="img-thumbnail" src="${ctx}/res/img/default.png">
+												</td>
+												<td valign="top">
+													<a style="text-decoration: none; color: black" target="_blank" href="${ctx}/dish/index.action?dishId=${dishVo.dish.id}">
+														<div style="font-size: 15px">${dishVo.dish.dname}</div>
+													</a>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td width="15%" valign="top" class="text-center">
+										${dishVo.dish.price}
+									</td>
+									<td width="15%" valign="top" class="text-center">
+										<div class="input-group" style="margin-top:2px;margin-left:10px;margin-right:10px" >
+											<span class="input-group-addon" style="cursor: pointer" name="dish_substract" onclick="dish_change_num(this)">-</span>
+											<input type="text" value="${dishVo.num}" name="dish_num" dish-id="${dishVo.dish.id}" class="form-control" 
+												 onkeyup="value=value.replace(/[^\\d]/g,\'\')" style="text-align: center" />
+											<span class="input-group-addon" style="cursor: pointer" name="dish_add" onclick="dish_change_num(this)">+</span>
+										</div>
+									</td>
+									<td width="15%" valign="top" class="text-center">
+										${dishVo.num * dishVo.dish.price}
+									</td>
+									<td width="15%" valign="top" class="text-center">
+										<button class="btn btn-default" onclick="dish_remove(${dishVo.dish.id})">删除</button>
+									</td>
+								</tr>
+							</#list>
+						</tbody>
+					</table>
+				</div>
+			</#list>
+			</#if>
+			<#if cart??>
+				<div class="row" style="margin-left:0px;margin-right:0px;height:60px;border:1px solid #EEE;padding-top:5px">
+					<div class="col-md-1" style="padding-left:7px">
+						<input type="checkbox" />全选
+					</div>
+					<div class="col-md-3">
+						<button class="btn btn-default" onclick="removeBatch()">删除选中的菜品</button>
+					</div>
+					<div class="col-md-2">
+						 已选择<span id="span_cart_total_num" style="color:red;padding-left:2px;padding-right:2px">0</span>件商品
+					</div>
+					<div class="col-md-4" > 
+						总价（不含运费）： <span id="span_cart_total_price" style="color:red;padding-left:2px;padding-right:2px">0.00</span>
+					</div>
+					<div class="col-md-2">
+						<button class="btn btn-danger" onclick="order_to_cart()">去结算</button>
+					</div>
+				</div>
+			</#if>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		
+		//菜品改变数量(通过'+','-'号，点一个只能增、减一个)
+		function dish_change_num(dom){
+			var input = $(dom).parent().find('input');
+			var dish_id = input.attr('dish-id');
+			var num = input.val();
+			if(num === ''){
+				alert('数量不能为空');
+				return;
+			}
+			
+			num = parseInt(num);
+			
+			if($(dom).attr('name')==='dish_substract'){
+				if(num <= 1){
+					alert('数量不能小于1');
+					return;
+				}
+				num = num - 1;
+				var dish_num = '-1';
+			}else if($(dom).attr('name')==='dish_add'){
+				num = num + 1;
+				var dish_num = '1';
+			}
+			
+			$.ajax({
+				url:'${ctx}/cart/changeItemNum',
+				type:'post',
+				dataType:'json',
+				data: {
+					dish_id : dish_id,
+					dish_num : dish_num
+				},
+				success:function(res){
+					if(res.success){
+						window.location="${ctx}/cart/view";
+					}else{
+						alert(res.message);
+					}
+				},
+				error:function(){
+					
+				}
+			});
+		}
+		
+		//删除单个菜品
+		function dish_remove(dish_id){
+			$.post(
+					'${ctx}/cart/removeItem',
+					{dish_id : dish_id},
+					function(res){
+						if(res.success){
+							alert(res.message);
+							window.location="${ctx}/cart/view";
+						}else{
+							alert(res.message);
+						}
+					},
+					'json'
+				);
+		}
+		
+		//全部选中
+		function checkAll() {
+			var a = $('#checkAll').prop("checked");
+			$('input[name="dish_ids"]').prop("checked", a);
+			getChecked();
+		}
+		
+		//*全部选中某个店铺中的菜品
+		function check_shop_dish(dom){
+			var a = $(dom).prop("checked");
+			$(dom).parent().next().find(':checkbox').prop("checked", a);
+			getChecked();
+		}
+		
+		//批量删除菜品
+		function removeBatch(){
+			var dish_ids = [];
+			$('input[name="dish_ids"]:checked').each(function() {
+				dish_ids.push($(this).val());
+			});
+			if(dish_ids.length < 1){
+				alert('最少选择一项');
+				return;
+			}
+			$.ajax({
+				url:'${ctx}/cart/removeBatch',
+				type : 'post',
+				dataType : 'json',
+				data:'dish_ids=' + dish_ids.join(','),
+				success : function(res) {
+					if (res.success) {
+						alert(res.message);
+						window.location = '${ctx}/cart/view';
+					}else{
+						
+					}
+				},
+				error : function() {
+					alert('请求失败');
+				}
+			});
+		}
+		
+		//获取已选择的菜品的总数量和总价格
+		function getChecked(){
+			getCheckedNum();
+			getCheckedPrice();
+		}
+		
+		//获取已选择的菜品的总数量
+		function getCheckedNum(){
+			var dish_ids = [];
+			$('input[name="dish_ids"]:checked').each(function() {
+				dish_ids.push($(this).val());
+			});
+			
+			$('#span_cart_total_num').load('${ctx}/cart/getCheckedNum?dish_ids='+ dish_ids.join(','));
+		}
+		
+		//获取已选择的菜品的总价格
+		function getCheckedPrice(){
+			var dish_ids = [];
+			$('input[name="dish_ids"]:checked').each(function() {
+				dish_ids.push($(this).val());
+			});
+			
+			$('#span_cart_total_price').load('${ctx}/cart/getCheckedPrice?dish_ids='+ dish_ids.join(','));
+		}
+		
+		// *跳转到结算页面(把选中的菜品的id传到后台,存入cartVo中)
+		function order_to_cart(){
+			var dish_ids = [];
+			$('input[name="dish_ids"]:checked').each(function() {
+				dish_ids.push($(this).val());
+			});
+
+			$.ajax({
+				url:'${ctx}/order/toCatr',
+				type : 'post',
+				dataType : 'json',
+				data:'dish_ids=' + dish_ids.join(','),
+				success : function(res) {
+					if (res) {
+						window.location = '${ctx}/order/confirm';
+					}else{
+						
+					}
+				},
+				error : function() {
+					alert('请求失败');
+				}
+			});
+		}
+	</script>
+</body>
+</html>

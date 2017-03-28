@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oos.mapper.DeptMapper">
+	<resultMap id="BaseResultMap" type="com.oos.model.Dept">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="dname" property="dname" jdbcType="VARCHAR" />
+		<result column="ddesc" property="ddesc" jdbcType="VARCHAR" />
+		<result column="leader" property="leader" jdbcType="VARCHAR" />
+		<result column="loc" property="loc" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		id, dname, ddesc, leader, loc, create_time, modify_time
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.oos.model.DeptExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from dept
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from dept
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from dept
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.oos.model.DeptExample">
+		delete from dept
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.oos.model.Dept">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dept (dname, ddesc, leader,
+		loc, create_time, modify_time
+		)
+		values (#{dname,jdbcType=VARCHAR}, #{ddesc,jdbcType=VARCHAR},
+		#{leader,jdbcType=VARCHAR},
+		#{loc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.oos.model.Dept">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dept
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dname != null">
+				dname,
+			</if>
+			<if test="ddesc != null">
+				ddesc,
+			</if>
+			<if test="leader != null">
+				leader,
+			</if>
+			<if test="loc != null">
+				loc,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="dname != null">
+				#{dname,jdbcType=VARCHAR},
+			</if>
+			<if test="ddesc != null">
+				#{ddesc,jdbcType=VARCHAR},
+			</if>
+			<if test="leader != null">
+				#{leader,jdbcType=VARCHAR},
+			</if>
+			<if test="loc != null">
+				#{loc,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.oos.model.DeptExample"
+		resultType="java.lang.Integer">
+		select count(*) from dept
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update dept
+		<set>
+			<if test="record.id != null">
+				id = #{record.id,jdbcType=BIGINT},
+			</if>
+			<if test="record.dname != null">
+				dname = #{record.dname,jdbcType=VARCHAR},
+			</if>
+			<if test="record.ddesc != null">
+				ddesc = #{record.ddesc,jdbcType=VARCHAR},
+			</if>
+			<if test="record.leader != null">
+				leader = #{record.leader,jdbcType=VARCHAR},
+			</if>
+			<if test="record.loc != null">
+				loc = #{record.loc,jdbcType=VARCHAR},
+			</if>
+			<if test="record.createTime != null">
+				create_time = #{record.createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.modifyTime != null">
+				modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update dept
+		set id = #{record.id,jdbcType=BIGINT},
+		dname = #{record.dname,jdbcType=VARCHAR},
+		ddesc = #{record.ddesc,jdbcType=VARCHAR},
+		leader = #{record.leader,jdbcType=VARCHAR},
+		loc = #{record.loc,jdbcType=VARCHAR},
+		create_time = #{record.createTime,jdbcType=TIMESTAMP},
+		modify_time = #{record.modifyTime,jdbcType=TIMESTAMP}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.oos.model.Dept">
+		update dept
+		<set>
+			<if test="dname != null">
+				dname = #{dname,jdbcType=VARCHAR},
+			</if>
+			<if test="ddesc != null">
+				ddesc = #{ddesc,jdbcType=VARCHAR},
+			</if>
+			<if test="leader != null">
+				leader = #{leader,jdbcType=VARCHAR},
+			</if>
+			<if test="loc != null">
+				loc = #{loc,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.oos.model.Dept">
+		update dept
+		set dname = #{dname,jdbcType=VARCHAR},
+		ddesc = #{ddesc,jdbcType=VARCHAR},
+		leader = #{leader,jdbcType=VARCHAR},
+		loc = #{loc,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectPage" resultMap="BaseResultMap" parameterType="com.oos.model.DeptExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from dept
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		limit #{pageIndex},#{pageSize}
+
+	</select>
+</mapper>

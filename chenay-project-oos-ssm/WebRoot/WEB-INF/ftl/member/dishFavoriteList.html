@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>菜品收藏</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/bootstrap.extend.js"></script>
+</head>
+<body style="margin: 10px;overflow: scroll;min-height:2000px">
+	<#include "/ftl/header.html">
+	<div class="container">
+		<p style="margin-top:5px;margin-bottom: 0px">店铺收藏列表</p>
+		<!-- 分隔线 -->
+		<hr
+			style="height: 5px; margin-top: 5px; margin-bottom: 5px; border: none; border-top: 5px ridge green;" />
+		<!-- 列表数据 -->
+		<ul class="list-group" id="order_list_ul" >
+			<li class="list-group-item" style="border: 0px; margin-top: 1px; padding-top: 2px; padding-bottom: 2px">
+				<div class="row">
+					<table class="table" id="table_header" style="margin-bottom: 5px">
+						<thead style="background: #EEEEEE">
+							<tr>
+								<th width="40%" valign="top">菜品</th>
+								<th width="20%" valign="top" class="text-center">操作</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</li>
+			<li class="list-group-item" style="border: 0px; margin-top: 1px; padding-top: 2px; padding-bottom: 2px">
+				<div class="row">
+					<table class="table"> 
+						<tbody style="background: #FFF4E8">
+							<#list dishFavorite as df>
+								<tr>
+									<td width="30%" valign="top" >
+										<table style="width: 100%" >
+											<tr>
+												<td valign="top" width="20%" >
+													<img width="50" class="img-thumbnail" src="${ctx}/res/img/default.png">
+												</td>
+												<td valign="top">
+													<div>
+														<div>${df.dish.dname}</div>
+														<div>销量：20</div>
+														<div>价格：${df.dish.price}元,优惠：${df.dish.coupon}元</div>
+													</div>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td width="20%" valign="top" class="text-center">
+										<button type="button" class="btn btn-primary" onclick="abolish_dish_favorite(${df.dishId})">取消收藏</button>
+									</td>
+								</tr>
+							</#list>
+						</tbody>
+					</table>
+				</div>
+			</li>
+		</ul>
+		
+		
+		<!-- 分页条 -->
+		<div style="vertical-align: middle;" class="row" id="order_list_pagebar">
+			<div class="col-sm-6">
+				<h4>
+					<span class="label label-default">共${pb.total}条记录,当前第${pb.pageIndex+1} / ${pb.totalPage}页</span>
+				</h4>
+			</div>
+			<div class="col-sm-6">
+				<ul style="margin-top: 5px; margin-bottom: 5px; float: right" class="pager">
+					<#if pb.pageIndex==0 >
+						<li class="disabled"><a href="#">首页</a></li>
+					</#if>
+					<#if pb.pageIndex!=0 >
+						<li><a href="${ctx}/member/dishFavoriteList?pageIndex=0&pageSize=${pb.pageSize}">首页</a></li>
+					</#if>
+					
+					<#if pb.pageIndex==pb.previousIndex>
+						<li style="margin-left: 5px" class="disabled"><a href="#">上一页</a></li>
+					</#if>
+					
+					<#if pb.pageIndex!=pb.previousIndex>
+						<li style="margin-left: 5px"><a
+							href="${ctx}/member/dishFavoriteList?pageIndex=${pb.previousIndex}&pageSize=${pb.pageSize}">上一页</a></li>
+					</#if>
+		
+					<#if pb.pageIndex==pb.nextPageIndex>
+						<li style="margin-left: 5px" class="disabled"><a href="#">下一页</a></li>
+					</#if>
+					<#if pb.pageIndex!=pb.nextPageIndex>
+						<li style="margin-left: 5px"><a
+							href="${ctx}/member/dishFavoriteList?pageIndex=${pb.nextPageIndex}&pageSize=${pb.pageSize}">下一页</a></li>
+					</#if>
+		
+					<#if pb.pageIndex==pb.lastPageIndex>
+						<li style="margin-left: 5px" class="disabled"><a href="#">尾页</a></li>
+					</#if>
+					<#if pb.pageIndex!=pb.lastPageIndex>
+						<li style="margin-left: 5px"><a
+							href="${ctx}/member/dishFavoriteList?pageIndex=${pb.lastPageIndex}&pageSize=${pb.pageSize}">尾页</a></li>
+					</#if>
+				</ul>
+			</div>
+		</div>
+	</div>
+		
+		
+	<script type="text/javascript">
+		
+		// 取消收藏
+		function abolish_dish_favorite(dishId){
+			$.ajax({
+				url:'${ctx}/member/abolishDishFavorite',
+				type:'post',
+				dataType:'json',
+				data: 'dishId='+dishId,
+				success:function(res){
+					if(res){
+						window.location="${ctx}/member/dishFavoriteList";
+					}else{
+						alert('操作失败');
+					}
+				}
+			});
+		}
+	</script>
+</body>
+</html>

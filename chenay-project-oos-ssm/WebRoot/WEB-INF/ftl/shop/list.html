@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>我的订单</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/bootstrap.extend.js"></script>
+</head>
+<body style="margin: 10px;overflow: scroll;">
+	
+	<#include "/ftl/header.html">
+
+	<div class="container">
+		<p style="margin-top:5px;margin-bottom: 0px">订单列表</p>
+		
+		<#-- 分隔线 -->
+		<hr style="height: 5px; margin-top: 5px; margin-bottom: 5px; border: none; border-top: 5px ridge green;" />
+		
+		<#-- 列表数据 -->
+		<ul class="list-group" id="order_list_ul" style="padding-right: 0px">
+			<li class="list-group-item"
+				style="border: 0px; margin-top: 1px; padding-top: 2px; padding-bottom: 2px">
+				<div class="row">
+					<table class="table" id="table_header" style="margin-bottom: 5px">
+						<thead style="background: #EEEEEE">
+							<tr>
+								<th width="40%" valign="top">商品</th>
+								<th width="20%" valign="top" class="text-center">价格</th>
+								<th width="20%" valign="top" class="text-center">数量</th>
+								<th width="20%" valign="top" class="text-center">小计(元)</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</li>
+			<#-- 循环订单中的订单id -->
+			<#if pb??>
+			<#assign netOrder=pb.getData()>
+			<#list netOrder as order>
+				<li class="list-group-item" style="border: 0px; margin-top: 1px; padding-top: 2px; padding-bottom: 2px">
+					<div class="row">
+						<table class="table">
+							<caption style="margin-left: 8px"><a href="${ctx}/order/detail?orderId=${order.id}">订单${order.id}</a></caption>
+							<tbody style="background: #FFF4E8">
+								<#assign netorderdish=order.netOrderDish>
+								<#list netorderdish as orderdish>
+									<tr>
+										<td width="40%" valign="top">
+											<table style="width: 100%">
+												<tr>
+													<td valign="top" width="20%"><img width="50"
+														class="img-thumbnail" src="${ctx}/res/img/default.png">
+													</td>
+													<td valign="top">${orderdish.dish.dname}</td>
+												</tr>
+											</table>
+										</td>
+										<td width="20%" valign="top" class="text-center">${orderdish.price}</td>
+										<td width="20%" valign="top" class="text-center">${orderdish.qty}</td>
+										<td width="20%" valign="top" class="text-center">${orderdish.qty * orderdish.price}</td>
+									</tr>
+								</#list>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td></td>
+									<td align="right">总数量:<span style="color: red">${order.total}</span></td>
+									<td align="right">运费:<span style="color: red">￥${order.freight}元</span></td>
+									<td align="right">总金额:<span style="color: red">￥${order.total}元</span></td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</li>
+			</#list>
+			</#if>
+		</ul>
+		
+		<#-- 分页条 -->
+		<div style="vertical-align: middle;" class="row" id="order_list_pagebar">
+			<div class="col-sm-6">
+				<h4>
+					<span class="label label-default">共${pb.total}条记录,当前第${pb.pageIndex+1} / ${pb.totalPage}页</span>
+				</h4>
+			</div>
+			<div class="col-sm-6">
+				<ul style="margin-top: 5px; margin-bottom: 5px; float: right"
+					class="pager">
+					<#if pb.pageIndex==0 >
+						<li class="disabled"><a href="#">首页</a></li>
+					</#if>
+					<#if pb.pageIndex!=0 >
+						<li><a href="${ctx}/order/list?pageIndex=0&pageSize=${pb.pageSize}">首页</a></li>
+					</#if>
+					
+					<#if pb.pageIndex==pb.previousIndex>
+						<li style="margin-left: 5px" class="disabled"><a href="#">上一页</a></li>
+					</#if>
+					
+					<#if pb.pageIndex!=pb.previousIndex>
+						<li style="margin-left: 5px"><a
+							href="${ctx}/order/list?pageIndex=${pb.previousIndex}&pageSize=${pb.pageSize}">上一页</a></li>
+					</#if>
+
+					<#if pb.pageIndex==pb.nextPageIndex>
+						<li style="margin-left: 5px" class="disabled"><a href="#">下一页</a></li>
+					</#if>
+					<#if pb.pageIndex!=pb.nextPageIndex>
+						<li style="margin-left: 5px"><a
+							href="${ctx}/order/list?pageIndex=${pb.nextPageIndex}&pageSize=${pb.pageSize}">下一页</a></li>
+					</#if>
+
+					<#if pb.pageIndex==pb.lastPageIndex>
+						<li style="margin-left: 5px" class="disabled"><a href="#">尾页</a></li>
+					</#if>
+					<#if pb.pageIndex!=pb.lastPageIndex>
+						<li style="margin-left: 5px"><a
+							href="${ctx}/order/list?pageIndex=${pb.lastPageIndex}&pageSize=${pb.pageSize}">尾页</a></li>
+					</#if>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

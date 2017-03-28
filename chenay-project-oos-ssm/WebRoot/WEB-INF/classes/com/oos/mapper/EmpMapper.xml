@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oos.mapper.EmpMapper">
+	<resultMap id="BaseResultMap" type="com.oos.model.Emp">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="dept_id" property="deptId" jdbcType="BIGINT" />
+		<result column="ename" property="ename" jdbcType="VARCHAR" />
+		<result column="gender" property="gender" jdbcType="INTEGER" />
+		<result column="birthdate" property="birthdate" jdbcType="DATE" />
+		<result column="skill" property="skill" jdbcType="VARCHAR" />
+		<result column="enter_date" property="enterDate" jdbcType="DATE" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		id, dept_id, ename, gender, birthdate, skill, enter_date,
+		create_time,
+		modify_time
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.oos.model.EmpExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from emp
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from emp
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from emp
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.oos.model.EmpExample">
+		delete from emp
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.oos.model.Emp">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into emp (dept_id, ename, gender,
+		birthdate, skill, enter_date,
+		create_time, modify_time)
+		values (#{deptId,jdbcType=BIGINT},
+		#{ename,jdbcType=VARCHAR},
+		#{gender,jdbcType=INTEGER},
+		#{birthdate,jdbcType=DATE}, #{skill,jdbcType=VARCHAR},
+		#{enterDate,jdbcType=DATE},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.oos.model.Emp">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into emp
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="deptId != null">
+				dept_id,
+			</if>
+			<if test="ename != null">
+				ename,
+			</if>
+			<if test="gender != null">
+				gender,
+			</if>
+			<if test="birthdate != null">
+				birthdate,
+			</if>
+			<if test="skill != null">
+				skill,
+			</if>
+			<if test="enterDate != null">
+				enter_date,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="deptId != null">
+				#{deptId,jdbcType=BIGINT},
+			</if>
+			<if test="ename != null">
+				#{ename,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				#{gender,jdbcType=INTEGER},
+			</if>
+			<if test="birthdate != null">
+				#{birthdate,jdbcType=DATE},
+			</if>
+			<if test="skill != null">
+				#{skill,jdbcType=VARCHAR},
+			</if>
+			<if test="enterDate != null">
+				#{enterDate,jdbcType=DATE},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.oos.model.EmpExample"
+		resultType="java.lang.Integer">
+		select count(*) from emp
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update emp
+		<set>
+			<if test="record.id != null">
+				id = #{record.id,jdbcType=BIGINT},
+			</if>
+			<if test="record.deptId != null">
+				dept_id = #{record.deptId,jdbcType=BIGINT},
+			</if>
+			<if test="record.ename != null">
+				ename = #{record.ename,jdbcType=VARCHAR},
+			</if>
+			<if test="record.gender != null">
+				gender = #{record.gender,jdbcType=INTEGER},
+			</if>
+			<if test="record.birthdate != null">
+				birthdate = #{record.birthdate,jdbcType=DATE},
+			</if>
+			<if test="record.skill != null">
+				skill = #{record.skill,jdbcType=VARCHAR},
+			</if>
+			<if test="record.enterDate != null">
+				enter_date = #{record.enterDate,jdbcType=DATE},
+			</if>
+			<if test="record.createTime != null">
+				create_time = #{record.createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.modifyTime != null">
+				modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update emp
+		set id = #{record.id,jdbcType=BIGINT},
+		dept_id =
+		#{record.deptId,jdbcType=BIGINT},
+		ename =
+		#{record.ename,jdbcType=VARCHAR},
+		gender =
+		#{record.gender,jdbcType=INTEGER},
+		birthdate =
+		#{record.birthdate,jdbcType=DATE},
+		skill =
+		#{record.skill,jdbcType=VARCHAR},
+		enter_date =
+		#{record.enterDate,jdbcType=DATE},
+		create_time =
+		#{record.createTime,jdbcType=TIMESTAMP},
+		modify_time =
+		#{record.modifyTime,jdbcType=TIMESTAMP}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.oos.model.Emp">
+		update emp
+		<set>
+			<if test="deptId != null">
+				dept_id = #{deptId,jdbcType=BIGINT},
+			</if>
+			<if test="ename != null">
+				ename = #{ename,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				gender = #{gender,jdbcType=INTEGER},
+			</if>
+			<if test="birthdate != null">
+				birthdate = #{birthdate,jdbcType=DATE},
+			</if>
+			<if test="skill != null">
+				skill = #{skill,jdbcType=VARCHAR},
+			</if>
+			<if test="enterDate != null">
+				enter_date = #{enterDate,jdbcType=DATE},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.oos.model.Emp">
+		update emp
+		set
+		dept_id = #{deptId,jdbcType=BIGINT},
+		ename = #{ename,jdbcType=VARCHAR},
+		gender = #{gender,jdbcType=INTEGER},
+		birthdate =
+		#{birthdate,jdbcType=DATE},
+		skill = #{skill,jdbcType=VARCHAR},
+		enter_date = #{enterDate,jdbcType=DATE},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		modify_time =
+		#{modifyTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectPage" resultMap="BaseResultMap" parameterType="com.oos.model.EmpExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from emp
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		limit #{pageIndex},#{pageSize}
+	</select>
+
+
+	<resultMap id="deptResult" type="com.oos.model.Dept">
+		<id column="dept_id" property="id" jdbcType="BIGINT" />
+		<result column="dname" property="dname" jdbcType="VARCHAR" />
+		<result column="ddesc" property="ddesc" jdbcType="VARCHAR" />
+		<result column="leader" property="leader" jdbcType="VARCHAR" />
+		<result column="loc" property="loc" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="EmpMap" type="com.oos.model.Emp">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="dept_id" property="deptId" jdbcType="BIGINT" />
+		<result column="ename" property="ename" jdbcType="VARCHAR" />
+		<result column="gender" property="gender" jdbcType="INTEGER" />
+		<result column="birthdate" property="birthdate" jdbcType="DATE" />
+		<result column="skill" property="skill" jdbcType="VARCHAR" />
+		<result column="enter_date" property="enterDate" jdbcType="DATE" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+		<association property="dept" column="dept_id" javaType="com.oos.model.Dept"
+			resultMap="deptResult" />
+	</resultMap>
+
+	<select id="countByCondition" parameterType="map" resultType="java.lang.Integer">
+		select count(e.*)
+		from emp e
+		<if test="vo != null">
+			<!-- where 1=1 -->
+			<where>
+				<if test="vo.deptId != null">
+					e.dept_id=#{vo.deptId}
+				</if>
+				<if test="vo.ename != null and vo.ename !=''">
+					and e.ename like concat('%',#{vo.ename},'%')
+				</if>
+				<if test="vo.gender != null">
+					and e.gender=#{vo.gender}
+				</if>
+				<if test="vo.birthdateMin != null">
+					and e.birthdate <![CDATA[ >= ]]>
+					#{vo.birthdateMin}
+				</if>
+				<if test="vo.birthdateMax != null">
+					and e.birthdate <![CDATA[ <= ]]>
+					#{vo.birthdateMax}
+				</if>
+			</where>
+		</if>
+	</select>
+
+	<select id="selectPageByCondition" resultMap="EmpMap"
+		parameterType="map">
+		select e.*,d.dname,d.ddesc,d.leader,d.loc
+		from emp e left join dept d
+		on e.dept_id=d.id
+		<if test="vo != null">
+			<!-- where 1=1 -->
+			<where>
+				<if test="vo.deptId != null">
+					e.dept_id=#{vo.deptId}
+				</if>
+				<if test="vo.ename != null and vo.ename !=''">
+					and e.ename like concat('%',#{vo.ename},'%')
+				</if>
+				<if test="vo.gender != null">
+					and e.gender=#{vo.gender}
+				</if>
+				<if test="vo.birthdateMin != null">
+					and e.birthdate <![CDATA[ >= ]]>
+					#{vo.birthdateMin}
+				</if>
+				<if test="vo.birthdateMax != null">
+					and e.birthdate <![CDATA[ <= ]]>
+					#{vo.birthdateMax}
+				</if>
+			</where>
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		<if test="start!=null and limit!=null">
+			limit #{start},#{limit}
+		</if>
+	</select>
+
+	<select id="selectPageByCondition2" resultType="com.oos.model.Emp"
+		parameterType="map">
+		select e.id, e.dept_id as deptId, e.ename, e.gender, e.birthdate,
+		e.skill, e.enter_date as enterDate, e.create_time as createTime,
+		e.modify_time as modifyTime,
+		d.id as 'dept.id', d.dname as
+		'dept.dname',d.ddesc as 'dept.ddesc',d.leader as 'dept.leader',d.loc
+		as 'dept.loc'
+		from emp e left join dept d on e.dept_id=d.id
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		<if test="start!=null and limit!=null">
+			limit #{start},#{limit}
+		</if>
+	</select>
+
+</mapper>

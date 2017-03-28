@@ -1,0 +1,63 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="panel-title row">
+			<span style="margin-left: 10px; vertical-align: middle">基本信息</span> 
+		</div>
+	</div>
+	<div class="panel-body">
+		<#-- 文件上传1. form表单声明 enctype="multipart/form-data" method="post" -->
+		<form class="form-horizontal" role="form" 
+			action="${ctx}/shop/manageDetailSave" method="post"
+			id="shop_manage_detail_form" enctype="multipart/form-data">
+			<input type="hidden" name="id" value="${shop.id}"/>
+			<div class="form-group">
+				<label for="shop.sname" class="col-sm-2 control-label">名称</label>
+				<div class="col-sm-10">
+					<input type="text" name="sname" value="${shop.sname}" class="form-control" style="width:200px"
+					id="shop.sname" placeholder="请输入店铺名称">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="shop.tel" class="col-sm-2 control-label">电话</label>
+				<div class="col-sm-10">
+					<input type="text" name="tel" value="${shop.tel}" class="form-control" style="width:200px" id="shop.tel" placeholder="请输入练习电话">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="shop.address" class="col-sm-2 control-label">地址</label>
+				<div class="col-sm-10">
+					<input type="text" name="address" value="${shop.address}" class="form-control" id="shop.address" placeholder="请输入地址">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="shop.waitMinutes" class="col-sm-2 control-label">等待时间</label>
+				<div class="col-sm-10">
+					<div class="input-group" style="width:200px">
+						<input type="text" name="waitMinutes" value="${shop.waitMinutes}" class="form-control" 
+							id="shop.waitMinutes"/>
+						<span class="input-group-addon">分钟</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="shop.pic" class="col-sm-2 control-label">店铺图片</label>
+				<div class="col-sm-10">
+					<#-- 文件上传2. 输入框 声明 type="file"  -->
+					<input type="file" name="pic" id="shop.pic">
+					<#if (shop.pic)??>
+						<img width="100px" src="${ctx}/res/img/${shop.pic}"/>
+						${ctx}/res/img/${shop.pic}
+						123
+					<#else>
+						<img width="100px" src="${ctx}/res/img/default.png"/>
+						2
+					</#if>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="panel-footer">
+		<button class="btn btn-default" type="button" title="提示" onclick="$('#shop_manage_detail_form')[0].submit()">提交</button> 
+		<a class="btn btn-danger" onclick="$('#shop_manage_detail_form')[0].reset()">重置</a>
+	</div>
+</div>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>${shop.sname}</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/bootstrap.extend.js"></script>
+</head>
+<body style="margin: 10px">
+	<#include "/ftl/header.html">
+
+	<div class="container" style="margin-top:5px">
+		<div class="row" style="padding-left:15px;padding-right:15px">
+			<div style="float:left;vertical-align: middle;">管理店铺</div>
+		</div>
+		<hr style="height: 5px; margin-top: 5px; margin-bottom: 5px; border: none; border-top: 5px ridge green;" />
+		<div class="row" style="padding-left:15px;padding-right:15px">
+			<#-- 使用bootstrap的网格布局,左边2个单位,右边10个单位 -->
+			<div class="col-md-2">
+				<#-- 导航菜单 -->
+				<ul id="shop_manage_nav_ul" class="nav nav-pills nav-stacked">
+					<li class="text-center" style="width:110px"><a href="#" onclick="show_detail(this)">基本信息</a></li>
+					<li class="text-center" style="width:110px"><a href="#" onclick="show_dish_list(this)">菜品管理</a></li>
+				</ul>
+			</div>
+			<#-- 导航菜单 对应的内容 -->
+			<div id="manage_content" class="col-md-10"></div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		//点击调用设置店铺详细信息
+		function show_detail(dom){
+			$('#shop_manage_nav_ul').find('li').removeClass('active');
+			$(dom).parent().addClass('active');
+			$('#manage_content').load('${ctx}/shop/manageDetail?v='+new Date().getTime());
+		}
+		//点击调用设置店铺菜品信息
+		function show_dish_list(dom){
+			$('#shop_manage_nav_ul').find('li').removeClass('active');
+			$(dom).parent().addClass('active');
+			$('#manage_content').load('${ctx}/dish/shopDishList?v='+new Date().getTime());
+		}
+		//加载页面时自动点击第一个a标签
+		$('#shop_manage_nav_ul').find('a:eq(0)').click();
+	</script>
+</body>
+</html>

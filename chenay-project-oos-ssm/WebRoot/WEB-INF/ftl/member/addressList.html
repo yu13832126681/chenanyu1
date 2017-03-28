@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>我的收货地址</title>
+<link href="${ctx}/res/js/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet" />
+<script src="${ctx}/res/js/jquery-1.11.3/jquery.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/js/bootstrap.js"></script>
+<script src="${ctx}/res/js/bootstrap-3.3.5/bootstrap.extend.js"></script>
+</head>
+<body style="margin: 10px;overflow: scroll;min-height:2000px">
+	<#include "/ftl/header.html">
+	<div class="container">
+		<div class="row">
+			<div style="float: left; margin-left: 20px; vertical-align: middle; padding: 6px 12px;">
+				<p style="margin-top:5px;margin-bottom: 0px"><h3>收货地址列表</h3></p>
+			</div>
+			<div style="float: left; margin-right: 20px;padding-top:20px">
+				<button class="btn btn-default" onclick="address_add()">添加地址</button>
+			</div>
+		</div>
+		<!-- 分隔线 -->
+		<hr
+			style="height: 5px; margin-top: 5px; margin-bottom: 5px; border: none; border-top: 5px ridge green;" />
+		<!-- 列表数据 -->
+		<ul class="list-group" id="order_list_ul" >
+			<#list address as ad>
+				<li class="list-group-item" style="border: 0px; margin-top: 1px; padding-top: 2px; padding-bottom: 2px">
+					<div class="row">
+						<table class="table" id="table_body" style="margin-bottom: 5px">
+							<tbody style="background: #EEEEEE">
+								<tr>
+									<#if ad.isDefault==1>
+										<td width="10%" valign="top">
+											<input type="checkbox" checked="checked"/>&nbsp&nbsp默认地址
+										</td>
+									<#else>
+										<td width="10%" valign="top"><input type="checkbox" onclick="keep_default(${ad.id})"/>
+											&nbsp&nbsp设为默认
+										</td>
+									</#if>
+									<td width="10%" valign="top">${ad.receiver}</td>
+									<td width="60%" valign="top">${ad.address}</td>
+									<td width="10%" valign="top" style="text-align: right">
+										<button class="btn btn-success" onclick="address_edit(${ad.id})">修改</button>
+									</td>
+									<td width="10%" valign="top" style="text-align: left">
+										<button class="btn btn-warning" onclick="address_remove(${ad.id})">删除</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</li>
+			</#list>
+		</ul>
+		
+		<#-- 弹出添加和修改窗口 -->
+		<div id="shop_address_list_dialog" class="modal fade" tabindex="-1" role="dialog"
+		aria-labelledby="shop_dish_list_dialog_title" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="shop_address_list_dialog_title"></h4>
+				</div>
+				<div class="modal-body" id="shop_address_list_dialog_body">
+					<form id="shop_address_list_dialog_form" class="form-horizontal" role="form">
+					
+					
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary"
+						id="shop_address_list_dialog_commit_btn"></button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+
+		
+	<script type="text/javascript">
+		
+		// 弹出添加窗口
+		function address_add(){
+			$('#shop_address_list_dialog_title').html('添加收货地址');
+			$('#shop_address_list_dialog_form').load('${ctx}/member/addressAdd');
+			$('#shop_address_list_dialog_commit_btn').html('提交').attr('onclick','address_addSave()');
+			$('#shop_address_list_dialog').modal({
+				keyboard: true
+			});
+		}
+		
+		// 提交添加的收货地址数据
+		function address_addSave(){
+			var form_data = $('#shop_address_list_dialog_form').serialize();
+			$.ajax({
+				url:'${ctx}/member/addressAddSave',
+				type:'post',
+				dataType:'json',
+				data: form_data,
+				success:function(res){
+					if(res.success){
+						alert(res.message);
+						$('#shop_address_list_dialog').modal('hide');
+						window.location="${ctx}/member/addressList";
+					}
+				},
+				error:function(){
+					alert('请求失败');
+				}
+			})
+		}
+		
+		// 弹出修改的窗口
+		function address_edit(id){
+			$('#shop_address_list_dialog_title').html('修改收获地址');
+			$('#shop_address_list_dialog_form').load('${ctx}/member/addressEdit?id='+id);
+			$('#shop_address_list_dialog_commit_btn').html('提交').attr('onclick','address_editSave()');
+			$('#shop_address_list_dialog').modal({
+				keyboard: true
+			});
+		}
+
+		// 修改提交
+		function address_editSave(){
+			var form_data = $("#shop_address_list_dialog_form").serialize();
+			$.ajax({
+				url:'${ctx}/member/addressEditSave',
+				type:'post',
+				dataType:'json',
+				data: form_data,
+				success:function(res){
+					if(res.success){
+						alert(res.message);
+						$('#shop_member_list_dialog').modal('hide');
+						window.location="${ctx}/member/addressList";
+						return;
+					}
+					alert(res.message);
+				}
+			});
+		}
+		
+		// 删除地址
+		function address_remove(id){
+			$.ajax({
+				url:'${ctx}/member/addressRemove',
+				type:'post',
+				dataType:'json',
+				data: 'id='+id,
+				success:function(res){
+					if(res.success){
+						alert('删除成功');
+						window.location="${ctx}/member/addressList";
+						return;
+					}
+					alert('删除失败');
+				}
+			});
+		}
+		
+		// 点击多选框设置默认地址
+		function keep_default(id){
+			$.ajax({
+				url:'${ctx}/member/keepDefault',
+				type:'post',
+				dataType:'json',
+				data: 'id='+id,
+				success:function(res){
+					if(res){
+						window.location="${ctx}/member/addressList";
+					}
+				},
+				error:function(){
+					alert('请求失败');
+				}
+			});
+		}
+	</script>
+</body>
+</html>

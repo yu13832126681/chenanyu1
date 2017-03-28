@@ -1,0 +1,26 @@
+<input type="hidden" name="id" value="${address.id}"/>
+<div class="form-group">
+	<label for="dish.dname" class="col-sm-3 control-label">收货人</label>
+	<div class="col-sm-9">
+		<input type="text" class="form-control" id="receiver" name="receiver" value="${address.receiver}"
+			placeholder="请输入收货人">
+	</div>
+</div>
+<div class="form-group">
+	<label for="dish.ddesc" class="col-sm-3 control-label">收货地址</label>
+	<div class="col-sm-9">
+		<input type="text" class="form-control" id="address" name="address" value="${address.address}"
+			placeholder="请输入收货地址">
+	</div>
+</div>
+<div class="form-group">
+	<div class="col-sm-9">
+		<div class="radio" style="text-align: center">
+			<#if address.isDefault==1>
+				<input type="checkbox" checked="checked"/>&nbsp&nbsp默认地址
+			<#else>
+				<input type="checkbox" name="isDefault" value="1"/>&nbsp&nbsp设为默认地址
+			</#if>
+		</div>
+	</div>
+</div>
